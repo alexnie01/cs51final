@@ -18,14 +18,18 @@ index_lookup: dictionary of string keys and int values
 num_stations: int
 
 Graph's methods:
+__compute_distance(position1, position2) [intended to be private]
 __readInput(file_name) [intended to be private]
 __init__(file_name) [intended to be private]
 get_names()
 print_summary()
-add_station(name, usage, neighbors, weights, position)
-add_route(station1, station2, weight)
+add_station(name, usage, neighbors, position)
+add_route(station1, station2)
 delete_route(station1, station2)
 '''
+
+import csv
+import numpy as np
 
 class Graph:
     ''' 
@@ -34,12 +38,12 @@ class Graph:
     '''  
     # Adjacency List representation of our graph for quick neighbors
     #List of dictionaries. Key is which vertex the edge connects to. Value is edge weight.
-    #Example: [{1: 1, 2: 4, 3: 10}, {0: 1, 3: 7}, {0: 4, 3: 3}, {0: 10, 1: 7, 2: 3}]
+    #Example: [{1: 3, 2: 5, 3: 4, 4: 1}, {0: 3, 3: 2, 4: 3}, {0: 5, 3: 2}, {0: 4, 1: 2, 2: 2, 4: 4}, {0: 1, 1: 3, 3: 4}]
     adj_list = []
     
     #Adjacency Matrix representation of our graph for quick lookups
     #List of lists of integers. Entries are 0 if those two vertices don't have an edge between them, else entry is edge weight.
-    #Example: [[0, 1, 4, 10], [1, 0, 0, 7], [4, 0, 0, 3], [10, 7, 3, 0]]
+    #Example: [[0, 3, 5, 4], [3, 0, 0, 2], [5, 0, 0, 2], [4, 2, 2, 0]]
     adj_matrix = []
     
     # List of dictionaries allows us to lookup station information by index, such as station name, usage rate, coordinates
@@ -55,6 +59,19 @@ class Graph:
     # Number of stations in the network 
     num_stations = 0 
     
+    '''
+    Computes Cartesian distance (edge weight) given coordinate positions of two stations. Rounds up by taking floor and adding
+    1. Edge weight is always at least 1.
+    '''
+    def __compute_distance (self, position1, position2):
+        x1 = float(position1[0])
+        x2 = float(position1[1])
+        y1 = float(position2[0])
+        y2 = float(position2[1])
+        dist = np.floor(np.sqrt(((x1 - y1)*(x1 - y1)) + ((x2 - y2)*(x2 - y2)))) + 1.0
+        
+        return (int(dist))
+          
     ''' 
     Reads the graph in from a file and populates the instance 
     variables accordingly 
@@ -62,7 +79,6 @@ class Graph:
     Returns 5 variables: an adjacency list, adjacency matrix, station lookup list, index lookup dictionary, number of stations
     ''' 
     def __readInput(self, file_name): 
-        import csv
         
         #Open csv file for reading.
         with open(file_name, 'rU') as fh:
@@ -104,11 +120,14 @@ class Graph:
                 else:
                     #Add edge weight to initialAdjMatrix and initialAdjList
                     index1 = initialStationIndices[row[0]]
-                    index2 = initialStationIndices[row[1]]           
-                    initialAdjMatrix[index1][index2] = int(row[2])
-                    initialAdjMatrix[index2][index1] = int(row[2])
-                    initialAdjList[index1][index2] = int(row[2])
-                    initialAdjList[index2][index1] = int(row[2])
+                    index2 = initialStationIndices[row[1]] 
+                    #Compute the edge weight based on station positions.
+                    new_weight = self.__compute_distance(initialStationLookup[index1]["Position"], initialStationLookup[index2]["Position"])
+                    
+                    initialAdjMatrix[index1][index2] = new_weight
+                    initialAdjMatrix[index2][index1] = new_weight
+                    initialAdjList[index1][index2] = new_weight
+                    initialAdjList[index2][index1] = new_weight
 
                 counter = counter + 1
         
@@ -143,19 +162,22 @@ class Graph:
         print self.index_lookup
         print
         print "Station Info by Station Index: "
-        print self.station_lookup
+        for entry in self.station_lookup:
+            print entry
         print
         print "Adjacency Matrix: "
-        print self.adj_matrix
+        for entry in self.adj_matrix:
+            print entry
         print
         print "Adjacency List: "
-        print self.adj_list
+        for entry in self.adj_list:
+            print entry
     
     ''' 
-    Given a new station name, its usage, coordinates, a list of its neighbors by name, and a list of the edge weights in order,
+    Given a new station name, its usage, coordinates, a list of its neighbors by name,
     we add it into the adjacency list and matrix representations
     '''
-    def add_station(self, name, usage, neighbors, weights, position): 
+    def add_station(self, name, usage, neighbors, position): 
         
         #Update station_lookup
         self.station_lookup.append({"Index": self.num_stations, "Name":name, "Usage":usage, "Position":position})
@@ -174,24 +196,30 @@ class Graph:
         
         #Now input the edges
         for i in range(len(neighbors)):
-            theindex = self.index_lookup[neighbors[i]]
-            self.adj_matrix[theindex][self.num_stations] = weights[i]
-            self.adj_matrix[self.num_stations][theindex] = weights[i]
+            otherindex = self.index_lookup[neighbors[i]]
             
-            self.adj_list[theindex][self.num_stations] = weights[i]
-            self.adj_list[self.num_stations][theindex] = weights[i]
-        
+            #Compute edge weight based on station positions.
+            new_weight = self.__compute_distance(self.station_lookup[otherindex]["Position"], self.station_lookup[self.num_stations]["Position"])
+            
+            self.adj_matrix[otherindex][self.num_stations] = new_weight
+            self.adj_matrix[self.num_stations][otherindex] = new_weight
+            
+            self.adj_list[otherindex][self.num_stations] = new_weight
+            self.adj_list[self.num_stations][otherindex] = new_weight               
+                      
         #Update num_stations
         self.num_stations = self.num_stations + 1
-        
-    
+            
     ''' 
     Adds an edge to the graph, given two station names that are already in the graph. Overwrites old edge weight if there
     was already an edge.
     ''' 
-    def add_route(self, station1, station2, weight): 
+    def add_route(self, station1, station2): 
         index1 = self.index_lookup[station1]
         index2 = self.index_lookup[station2]
+        
+        weight = self.__compute_distance(self.station_lookup[index1]["Position"], self.station_lookup[index2]["Position"])
+        
         self.adj_matrix[index1][index2] = weight
         self.adj_matrix[index2][index1] = weight
         self.adj_list[index1][index2] = weight
