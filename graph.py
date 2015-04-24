@@ -119,8 +119,8 @@ class Graph:
                 #Read the rows of the csv files about edges between stations.
                 else:
                     #Add edge weight to initialAdjMatrix and initialAdjList
-                    index1 = initialStationIndices[row[0]]
-                    index2 = initialStationIndices[row[1]] 
+                    index1 = initialIndexLookup[row[0]]
+                    index2 = initialIndexLookup[row[1]] 
                     #Compute the edge weight based on station positions.
                     new_weight = self.__compute_distance(initialStationLookup[index1]["Position"], initialStationLookup[index2]["Position"])
                     
