@@ -12,20 +12,32 @@ Format for input CSV file: see the sample file.
 '''
 Graph's variables: 
 adj_list: list of dictionaries of int keys and int values
+
 adj_matrix: list of lists of ints
+
 station_lookup: list of dictionaries with various info
+
 index_lookup: dictionary of string keys and int values
+
 num_stations: int
 
 Graph's methods:
+
 __compute_distance(position1, position2) [intended to be private]
+
 __readInput(file_name) [intended to be private]
+
 __init__(file_name) [intended to be private]
+
 get_names()
+
 print_summary()
+
 add_station(name, usage, neighbors, position)
+
 add_route(station1, station2)
-delete_route(station1, station2)
+
+    delete_route(station1, station2)
 '''
 
 import csv
