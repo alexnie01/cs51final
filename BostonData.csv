@@ -1,1 +1,270 @@
-"First Row: Number of Stations. Section 1: Station Name, Usage, X-coordinate, Y-coordinate. Section 2 (Edges): Station A Name, Station B Name. NOTE: Omitted Mass Ave on Silver Line (repeat name), also St Paul's St on C-line",,,131,,,Alewife,10657,30,87Davis,11628,34,83Porter,8552,38,79Harvard,21868,42,75Central,14531,46,71Kendall/MIT,13975,50,67Charles/MGH,10615,54,63Park St,19836,58,58Downtown Crossing,22880,62,54South Station,22632,68,48Broadway,4200,71,40Andrew,5586,71,36JFK/UMass,7834,71,32Savin Hill,1863,66,20Fields Corner,4152,66,18Shawmut,2241,66,16Ashmont,8004,66,14Cedar Grove,91,66,12Butler,143,66,8Milton,240,64,8Central Ave,521,61,8Valley Rd,44,58,8Capen St,58,55,8Mattapan,1504,52,8North Quincy,7132,78,18Wollaston,4347,82,14Quincy Center,7913,86,10Quincy Adams,4383,90,6Braintree,4387,90,2Oak Grove,5994,65,94Malden,11258,65,90Wellington,7464,65,86Sullivan Square,9004,65,82Community College,3695,65,78North Station,16702,65,71Haymkt,11223,65,66State,12553,65,60Chinatown,5822,58,50Tufts Med Ctr,5684,53,44Back Bay,16769,49,40Mass Ave,5248,45,36Ruggies,8378,41,32Roxbury Crossing,3693,37,28Jackson Sq,4968,33,24Stony Brook,3163,29,20Green St,3229,25,16Forest Hills,13568,21,12Wonderland,5520,97,90Revere Beach,2693,94,87Beachmont,1936,91,84Suffolk Downs,794,88,81Orient Heights,4121,85,78Wood Island,1450,82,75Airport,6901,79,72Maverick,8134,76,69Aquarium,4444,70,63Gov't Center,11317,62,62Bowdoin,1454,58,66Airport Terminals,2626,86,62Silver Line Way,974,76,49WTC,2338,74,49Courthouse,945,72,49Boylston,7618,53,54Herald St,230,53,42E Berkeley,995,53,40Union Pk,1314,53,38Newton St,1316,53,36Worcester Sq,366,53,34Lenox St,428,53,32Melnea Cass,355,53,28Dudley,3128,53,26Boston College/Lake St,1042,0,54South Street,237,2,56Chestnut Hill Ave,861,4,58Chiswick Road,735,6,60Sutherland Road,923,8,62Washington St,1723,10,64Warren St,1650,12,66Allston St,1115,14,68Griggs St/Long Ave,1260,15,69Harvard Ave,4077,16,70Packards Corner,1571,17,70Babcock St,1824,19,68Pleasant St,1014,21,66St Paul St,814,23,64Boston Univ West,899,25,62Boston Univ Central,2524,27,60Boston Univ East,2892,29,58Blandford St,2840,31,56Cleveland Circle,1557,4,45Englewood Ave,585,6,47Dean Road,316,8,49Tappan St,837,10,51Washington Sq,1217,12,53Fairbanks,585,14,55Brandon Hall,316,16,57Summit Ave,1175,18,59Coolidge Corner,4150,20,61Kent St,510,22,61Hawes St,426,24,59St Mary's St,1970,26,57Riverside,2192,6,28Woodland,1044,8,30Waban,427,10,32Eliot,595,12,34Newton Highlands,1052,14,36Newton Centre,1487,16,38Chestnut Hill,778,18,40Reservoir,3395,20,42Beaconsfield,896,22,44Brookline Hills,1654,24,46Brookline Village,3512,26,48Longwood,2749,28,50Fenway,3041,30,52Heath St,622,22,27Back of the Hill,86,24,29Riverway,664,26,31Mission Park,462,28,33Fenwood Road,343,30,35Brigham Circle,2535,32,37Longwood Medical Area,3800,34,39Museum of Fine Arts,1676,36,41Northeastern University,3007,38,43Symphony,1993,40,45Prudential,3732,40,51Kenmore,8653,34,54Hynes,9525,39,54Copley,13500,43,54Arlington,8378,48,54Science Park,1179,62,74Lechmere,6645,60,76Alewife,Davis,,Davis,Porter,,Porter,Harvard,,Harvard,Central,,Central,Kendall/MIT,,Kendall/MIT,Charles/MGH,,Charles/MGH,Park St,,Park St,Downtown Crossing,,Downtown Crossing,South Station,,South Station,Broadway,,Broadway,Andrew,,Andrew,JFK/UMass,,JFK/UMass,Savin Hill,,Savin Hill,Fields Corner,,Fields Corner,Shawmut,,Shawmut,Ashmont,,Ashmont,Cedar Grove,,Cedar Grove,Butler,,Butler,Milton,,Milton,Central Ave,,Central Ave,Valley Rd,,Valley Rd,Capen St,,Capen St,Mattapan,,North Quincy,JFK/UMass,,Wollaston,North Quincy,,Quincy Center,Wollaston,,Quincy Adams,Quincy Center,,Braintree,Quincy Adams,,Malden,Oak Grove,,Wellington,Malden,,Sullivan Square,Wellington,,Community College,Sullivan Square,,North Station,Community College,,Haymkt,North Station,,State,Haymkt,,Downtown Crossing,State,,Chinatown,Downtown Crossing,,Tufts Med Ctr,Chinatown,,Back Bay,Tufts Med Ctr,,Mass Ave,Back Bay,,Ruggies,Mass Ave,,Roxbury Crossing,Ruggies,,Jackson Sq,Roxbury Crossing,,Stony Brook,Jackson Sq,,Green St,Stony Brook,,Forest Hills,Green St,,Revere Beach,Wonderland,,Beachmont,Revere Beach,,Suffolk Downs,Beachmont,,Orient Heights,Suffolk Downs,,Wood Island,Orient Heights,,Airport,Wood Island,,Maverick,Airport,,Aquarium,Maverick,,State,Aquarium,,Gov't Center,State,,Bowdoin,Gov't Center,,Silver Line Way,Airport Terminals,,WTC,Silver Line Way,,Courthouse,WTC,,South Station,Courthouse,,South Station,Tufts Med Ctr,,Tufts Med Ctr,Boylston,,Boylston,Downtown Crossing,,Chinatown,South Station,,Herald St,Tufts Med Ctr,,E Berkeley,Herald St,,Union Pk,E Berkeley,,Newton St,Union Pk,,Worcester Sq,Newton St,,Lenox St,Worcester Sq,,Melnea Cass,Lenox St,,Dudley,Melnea Cass,,South Street,Boston College/Lake St,,Chestnut Hill Ave,South Street,,Chiswick Road,Chestnut Hill Ave,,Sutherland Road,Chiswick Road,,Washington St,Sutherland Road,,Warren St,Washington St,,Allston St,Warren St,,Griggs St/Long Ave,Allston St,,Harvard Ave,Griggs St/Long Ave,,Packards Corner,Harvard Ave,,Babcock St,Packards Corner,,Pleasant St,Babcock St,,St Paul St,Pleasant St,,Boston Univ West,St Paul St,,Boston Univ Central,Boston Univ West,,Boston Univ East,Boston Univ Central,,Blandford St,Boston Univ East,,Englewood Ave,Cleveland Circle,,Dean Road,Englewood Ave,,Tappan St,Dean Road,,Washington Sq,Tappan St,,Fairbanks,Washington Sq,,Brandon Hall,Fairbanks,,Summit Ave,Brandon Hall,,Coolidge Corner,Summit Ave,,Kent St,Coolidge Corner,,Hawes St,Kent St,,St Mary's St,Hawes St,,Woodland,Riverside,,Waban,Woodland,,Eliot,Waban,,Newton Highlands,Eliot,,Newton Centre,Newton Highlands,,Chestnut Hill,Newton Centre,,Reservoir,Chestnut Hill,,Beaconsfield,Reservoir,,Brookline Hills,Beaconsfield,,Brookline Village,Brookline Hills,,Longwood,Brookline Village,,Fenway,Longwood,,Back of the Hill,Heath St,,Riverway,Back of the Hill,,Mission Park,Riverway,,Fenwood Road,Mission Park,,Brigham Circle,Fenwood Road,,Longwood Medical Area,Brigham Circle,,Museum of Fine Arts,Longwood Medical Area,,Northeastern University,Museum of Fine Arts,,Symphony,Northeastern University,,Prudential,Symphony,,Blandford St,Kenmore,,St Mary's St,Kenmore,,Fenway,Kenmore,,Kenmore,Hynes,,Prudential,Copley,,Hynes,Copley,,Copley,Arlington,,Arlington,Boylston,,Boylston,Park St,,Park St,Gov't Center,,Gov't Center,Haymkt,,Haymkt,North Station,,North Station,Science Park,,Science Park,Lechmere,,
+"First Row: Number of Stations. Section 1: Station Name, Usage, X-coordinate, Y-coordinate. Section 2 (Edges): Station A Name, Station B Name. NOTE: Omitted Mass Ave on Silver Line (repeat name), also St Paul's St on C-line",,,
+131,,,
+Alewife,10657,30,87
+Davis,11628,34,83
+Porter,8552,38,79
+Harvard,21868,42,75
+Central,14531,46,71
+Kendall/MIT,13975,50,67
+Charles/MGH,10615,54,63
+Park St,19836,58,58
+Downtown Crossing,22880,62,54
+South Station,22632,68,48
+Broadway,4200,71,40
+Andrew,5586,71,36
+JFK/UMass,7834,71,32
+Savin Hill,1863,66,20
+Fields Corner,4152,66,18
+Shawmut,2241,66,16
+Ashmont,8004,66,14
+Cedar Grove,91,66,12
+Butler,143,66,8
+Milton,240,64,8
+Central Ave,521,61,8
+Valley Rd,44,58,8
+Capen St,58,55,8
+Mattapan,1504,52,8
+North Quincy,7132,78,18
+Wollaston,4347,82,14
+Quincy Center,7913,86,10
+Quincy Adams,4383,90,6
+Braintree,4387,90,2
+Oak Grove,5994,65,94
+Malden,11258,65,90
+Wellington,7464,65,86
+Sullivan Square,9004,65,82
+Community College,3695,65,78
+North Station,16702,65,71
+Haymkt,11223,65,66
+State,12553,65,60
+Chinatown,5822,58,50
+Tufts Med Ctr,5684,53,44
+Back Bay,16769,49,40
+Mass Ave,5248,45,36
+Ruggies,8378,41,32
+Roxbury Crossing,3693,37,28
+Jackson Sq,4968,33,24
+Stony Brook,3163,29,20
+Green St,3229,25,16
+Forest Hills,13568,21,12
+Wonderland,5520,97,90
+Revere Beach,2693,94,87
+Beachmont,1936,91,84
+Suffolk Downs,794,88,81
+Orient Heights,4121,85,78
+Wood Island,1450,82,75
+Airport,6901,79,72
+Maverick,8134,76,69
+Aquarium,4444,70,63
+Gov't Center,11317,62,62
+Bowdoin,1454,58,66
+Airport Terminals,2626,86,62
+Silver Line Way,974,76,49
+WTC,2338,74,49
+Courthouse,945,72,49
+Boylston,7618,53,54
+Herald St,230,53,42
+E Berkeley,995,53,40
+Union Pk,1314,53,38
+Newton St,1316,53,36
+Worcester Sq,366,53,34
+Lenox St,428,53,32
+Melnea Cass,355,53,28
+Dudley,3128,53,26
+Boston College/Lake St,1042,0,54
+South Street,237,2,56
+Chestnut Hill Ave,861,4,58
+Chiswick Road,735,6,60
+Sutherland Road,923,8,62
+Washington St,1723,10,64
+Warren St,1650,12,66
+Allston St,1115,14,68
+Griggs St/Long Ave,1260,15,69
+Harvard Ave,4077,16,70
+Packards Corner,1571,17,70
+Babcock St,1824,19,68
+Pleasant St,1014,21,66
+St Paul St,814,23,64
+Boston Univ West,899,25,62
+Boston Univ Central,2524,27,60
+Boston Univ East,2892,29,58
+Blandford St,2840,31,56
+Cleveland Circle,1557,4,45
+Englewood Ave,585,6,47
+Dean Road,316,8,49
+Tappan St,837,10,51
+Washington Sq,1217,12,53
+Fairbanks,585,14,55
+Brandon Hall,316,16,57
+Summit Ave,1175,18,59
+Coolidge Corner,4150,20,61
+Kent St,510,22,61
+Hawes St,426,24,59
+St Mary's St,1970,26,57
+Riverside,2192,6,28
+Woodland,1044,8,30
+Waban,427,10,32
+Eliot,595,12,34
+Newton Highlands,1052,14,36
+Newton Centre,1487,16,38
+Chestnut Hill,778,18,40
+Reservoir,3395,20,42
+Beaconsfield,896,22,44
+Brookline Hills,1654,24,46
+Brookline Village,3512,26,48
+Longwood,2749,28,50
+Fenway,3041,30,52
+Heath St,622,22,27
+Back of the Hill,86,24,29
+Riverway,664,26,31
+Mission Park,462,28,33
+Fenwood Road,343,30,35
+Brigham Circle,2535,32,37
+Longwood Medical Area,3800,34,39
+Museum of Fine Arts,1676,36,41
+Northeastern University,3007,38,43
+Symphony,1993,40,45
+Prudential,3732,40,51
+Kenmore,8653,34,54
+Hynes,9525,39,54
+Copley,13500,43,54
+Arlington,8378,48,54
+Science Park,1179,62,74
+Lechmere,6645,60,76
+Alewife,Davis,,
+Davis,Porter,,
+Porter,Harvard,,
+Harvard,Central,,
+Central,Kendall/MIT,,
+Kendall/MIT,Charles/MGH,,
+Charles/MGH,Park St,,
+Park St,Downtown Crossing,,
+Downtown Crossing,South Station,,
+South Station,Broadway,,
+Broadway,Andrew,,
+Andrew,JFK/UMass,,
+JFK/UMass,Savin Hill,,
+Savin Hill,Fields Corner,,
+Fields Corner,Shawmut,,
+Shawmut,Ashmont,,
+Ashmont,Cedar Grove,,
+Cedar Grove,Butler,,
+Butler,Milton,,
+Milton,Central Ave,,
+Central Ave,Valley Rd,,
+Valley Rd,Capen St,,
+Capen St,Mattapan,,
+North Quincy,JFK/UMass,,
+Wollaston,North Quincy,,
+Quincy Center,Wollaston,,
+Quincy Adams,Quincy Center,,
+Braintree,Quincy Adams,,
+Malden,Oak Grove,,
+Wellington,Malden,,
+Sullivan Square,Wellington,,
+Community College,Sullivan Square,,
+North Station,Community College,,
+Haymkt,North Station,,
+State,Haymkt,,
+Downtown Crossing,State,,
+Chinatown,Downtown Crossing,,
+Tufts Med Ctr,Chinatown,,
+Back Bay,Tufts Med Ctr,,
+Mass Ave,Back Bay,,
+Ruggies,Mass Ave,,
+Roxbury Crossing,Ruggies,,
+Jackson Sq,Roxbury Crossing,,
+Stony Brook,Jackson Sq,,
+Green St,Stony Brook,,
+Forest Hills,Green St,,
+Revere Beach,Wonderland,,
+Beachmont,Revere Beach,,
+Suffolk Downs,Beachmont,,
+Orient Heights,Suffolk Downs,,
+Wood Island,Orient Heights,,
+Airport,Wood Island,,
+Maverick,Airport,,
+Aquarium,Maverick,,
+State,Aquarium,,
+Gov't Center,State,,
+Bowdoin,Gov't Center,,
+Silver Line Way,Airport Terminals,,
+WTC,Silver Line Way,,
+Courthouse,WTC,,
+South Station,Courthouse,,
+South Station,Tufts Med Ctr,,
+Tufts Med Ctr,Boylston,,
+Boylston,Downtown Crossing,,
+Chinatown,South Station,,
+Herald St,Tufts Med Ctr,,
+E Berkeley,Herald St,,
+Union Pk,E Berkeley,,
+Newton St,Union Pk,,
+Worcester Sq,Newton St,,
+Lenox St,Worcester Sq,,
+Melnea Cass,Lenox St,,
+Dudley,Melnea Cass,,
+South Street,Boston College/Lake St,,
+Chestnut Hill Ave,South Street,,
+Chiswick Road,Chestnut Hill Ave,,
+Sutherland Road,Chiswick Road,,
+Washington St,Sutherland Road,,
+Warren St,Washington St,,
+Allston St,Warren St,,
+Griggs St/Long Ave,Allston St,,
+Harvard Ave,Griggs St/Long Ave,,
+Packards Corner,Harvard Ave,,
+Babcock St,Packards Corner,,
+Pleasant St,Babcock St,,
+St Paul St,Pleasant St,,
+Boston Univ West,St Paul St,,
+Boston Univ Central,Boston Univ West,,
+Boston Univ East,Boston Univ Central,,
+Blandford St,Boston Univ East,,
+Englewood Ave,Cleveland Circle,,
+Dean Road,Englewood Ave,,
+Tappan St,Dean Road,,
+Washington Sq,Tappan St,,
+Fairbanks,Washington Sq,,
+Brandon Hall,Fairbanks,,
+Summit Ave,Brandon Hall,,
+Coolidge Corner,Summit Ave,,
+Kent St,Coolidge Corner,,
+Hawes St,Kent St,,
+St Mary's St,Hawes St,,
+Woodland,Riverside,,
+Waban,Woodland,,
+Eliot,Waban,,
+Newton Highlands,Eliot,,
+Newton Centre,Newton Highlands,,
+Chestnut Hill,Newton Centre,,
+Reservoir,Chestnut Hill,,
+Beaconsfield,Reservoir,,
+Brookline Hills,Beaconsfield,,
+Brookline Village,Brookline Hills,,
+Longwood,Brookline Village,,
+Fenway,Longwood,,
+Back of the Hill,Heath St,,
+Riverway,Back of the Hill,,
+Mission Park,Riverway,,
+Fenwood Road,Mission Park,,
+Brigham Circle,Fenwood Road,,
+Longwood Medical Area,Brigham Circle,,
+Museum of Fine Arts,Longwood Medical Area,,
+Northeastern University,Museum of Fine Arts,,
+Symphony,Northeastern University,,
+Prudential,Symphony,,
+Blandford St,Kenmore,,
+St Mary's St,Kenmore,,
+Fenway,Kenmore,,
+Kenmore,Hynes,,
+Prudential,Copley,,
+Hynes,Copley,,
+Copley,Arlington,,
+Arlington,Boylston,,
+Boylston,Park St,,
+Park St,Gov't Center,,
+Gov't Center,Haymkt,,
+Haymkt,North Station,,
+North Station,Science Park,,
+Science Park,Lechmere,,

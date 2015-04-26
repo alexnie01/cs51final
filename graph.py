@@ -75,7 +75,7 @@ class Graph:
     Computes Cartesian distance (edge weight) given coordinate positions of two stations. Rounds up by taking floor and adding
     1. Edge weight is always at least 1.
     '''
-    def __compute_distance (self, position1, position2):
+    def compute_distance (self, position1, position2):
         x1 = float(position1[0])
         x2 = float(position1[1])
         y1 = float(position2[0])
@@ -83,7 +83,26 @@ class Graph:
         dist = np.floor(np.sqrt(((x1 - y1)*(x1 - y1)) + ((x2 - y2)*(x2 - y2)))) + 1.0
         
         return (int(dist))
-          
+    
+    def get_distance(self,node1,node2):
+        position1 = self.station_lookup[node1]['Position']
+        position2 = self.station_lookup[node2]['Position']
+        return self.compute_distance(position1,position2)
+        
+    def path_length(self, node_list): 
+        if len(node_list)==0:
+            return 0
+        cumul_distance=0
+        for i in range(0,len(node_list)-1):
+            distance=self.adj_matrix[node_list[i]][node_list[i+1]]
+            cumul_distance=cumul_distance+distance
+        return cumul_distance
+        
+    def nums_to_names(self,index_list):
+        return [self.station_lookup[num]['Name'] for num in index_list]
+
+
+    
     ''' 
     Reads the graph in from a file and populates the instance 
     variables accordingly 
@@ -134,7 +153,7 @@ class Graph:
                     index1 = initialIndexLookup[row[0]]
                     index2 = initialIndexLookup[row[1]] 
                     #Compute the edge weight based on station positions.
-                    new_weight = self.__compute_distance(initialStationLookup[index1]["Position"], initialStationLookup[index2]["Position"])
+                    new_weight = self.compute_distance(initialStationLookup[index1]["Position"], initialStationLookup[index2]["Position"])
                     
                     initialAdjMatrix[index1][index2] = new_weight
                     initialAdjMatrix[index2][index1] = new_weight
@@ -155,6 +174,12 @@ class Graph:
     ''' 
     Returns an array where indices are station indices and values are names 
     '''
+    def get_number(self,station_name):
+        for station in self.station_lookup:
+            if station["Name"]==station_name:
+                return station['Index']
+        return 'No station with that exactly phrased name.'
+    
     def get_names(self): 
         all_names = []
         for station in self.station_lookup:
@@ -211,7 +236,7 @@ class Graph:
             otherindex = self.index_lookup[neighbors[i]]
             
             #Compute edge weight based on station positions.
-            new_weight = self.__compute_distance(self.station_lookup[otherindex]["Position"], self.station_lookup[self.num_stations]["Position"])
+            new_weight = self.compute_distance(self.station_lookup[otherindex]["Position"], self.station_lookup[self.num_stations]["Position"])
             
             self.adj_matrix[otherindex][self.num_stations] = new_weight
             self.adj_matrix[self.num_stations][otherindex] = new_weight
@@ -230,7 +255,7 @@ class Graph:
         index1 = self.index_lookup[station1]
         index2 = self.index_lookup[station2]
         
-        weight = self.__compute_distance(self.station_lookup[index1]["Position"], self.station_lookup[index2]["Position"])
+        weight = self.compute_distance(self.station_lookup[index1]["Position"], self.station_lookup[index2]["Position"])
         
         self.adj_matrix[index1][index2] = weight
         self.adj_matrix[index2][index1] = weight
