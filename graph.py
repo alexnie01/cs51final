@@ -42,6 +42,8 @@ add_route(station1, station2)
 
 import csv
 import numpy as np
+import networkx as nx 
+import matplotlib.pyplot as plt 
 
 class Graph:
     ''' 
@@ -70,6 +72,8 @@ class Graph:
     
     # Number of stations in the network 
     num_stations = 0 
+    
+    graph_obj = nx.Graph()
     
     '''
     Computes Cartesian distance (edge weight) given coordinate positions of two stations. Rounds up by taking floor and adding
@@ -168,7 +172,9 @@ class Graph:
     __init__ function
     '''
     def __init__(self, file_name): 
-        self.adj_list, self.adj_matrix, self.station_lookup, self.index_lookup, self.num_stations = self.__readInput(file_name)
+        self.adj_list, self.adj_matrix, self.station_lookup, self.index_lookup, \
+        self.num_stations = self.__readInput(file_name)
+        self.initializeGraph()
         
         
     ''' 
@@ -231,12 +237,16 @@ class Graph:
         
         self.adj_list.append({})
         
+        self.graph_obj.add_node(self.num_stations)
+        
         #Now input the edges
         for i in range(len(neighbors)):
             otherindex = self.index_lookup[neighbors[i]]
             
             #Compute edge weight based on station positions.
             new_weight = self.compute_distance(self.station_lookup[otherindex]["Position"], self.station_lookup[self.num_stations]["Position"])
+            
+            self.graph_obj.add_edge(otherindex, self.num_stations)            
             
             self.adj_matrix[otherindex][self.num_stations] = new_weight
             self.adj_matrix[self.num_stations][otherindex] = new_weight
@@ -262,6 +272,8 @@ class Graph:
         self.adj_list[index1][index2] = weight
         self.adj_list[index2][index1] = weight
         
+        self.graph_obj.add_edge(index1, index2)
+        
     ''' 
     Delete an edge of the graph, given two station names that are already in the graph. Does nothing is an edge is already
     not present.
@@ -273,3 +285,22 @@ class Graph:
         self.adj_matrix[index2][index1] = 0
         del self.adj_list[index1][index2]
         del self.adj_list[index2][index1]
+        self.graph_obj.remove_edge(index1, index2)
+    
+    def initializeGraph(self): 
+        self.graph_obj.add_nodes_from(range(self.num_stations))
+        for i in range(len(self.adj_matrix)):
+            for j in range(len(self.adj_matrix[i])):
+                if self.adj_matrix[i][j] != 0: 
+                    self.graph_obj.add_edge(i,j)
+    
+    def draw(self): 
+        pos={} 
+        for i in range(self.num_stations): 
+            pos[i] = self.station_lookup[i]['Position'] 
+        nx.draw(self.graph_obj, pos, node_size=60)
+        
+subway = Graph('BostonData.csv') 
+plt.figure(1)
+subway.draw()
+plt.savefig('test.png')

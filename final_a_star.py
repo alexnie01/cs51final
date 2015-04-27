@@ -7,11 +7,6 @@ Created on Sat Apr 25 12:42:19 2015
 import itertools
 import time
 
-
-
-
-
-
 def a_star(graph, start, goal):
     if start==goal:
         return([start])  
