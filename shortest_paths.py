@@ -44,7 +44,35 @@ class ShortestPathsDijkstra(ShortestPathsAlg):
        elif name == 'fib': 
            self.data_structure = ds.Fib()
        else: 
-           self.data_strucutre = ds.Priority()      
+           self.data_structure = ds.Priority()  
+   
+   '''
+   Init = initial node index
+   '''
+   def singleSourceDist(self, init):
+       
+       # wavefront
+       self.data_structure.insert(init,0)
+       
+       # stores final distances behind wavefront
+       dist = [sys.maxint] * self.num_stations
+       
+       # nodes to be searched
+       searched = [False] * self.num_stations
+       dist[init] = 0
+            
+        for i in range(0,self.num_stations):
+            
+            min_adj, dist[min_adj] = self.data_structure.deleteMin()
+            
+            #pretend min_adj is index of next node
+            searched[min_adj] = True
+            
+            for j,k in self.adj_list[min_adj].iteritems():
+                if not searched[j]:
+                    self.data_structure.insert(j, k + dist[min_adj])
+        return dist
+                        
 
 class ShortestPathsAStar(ShortestPathsAlg): 
     pass
