@@ -36,11 +36,8 @@ class Priority(DijkstraDataStructure):
         else:
             length = len(self.data_structure)
             for i in range(0, length):
-                if value < self.data_structure[i]["value"]:
+                if value <= self.data_structure[i]["value"]:
                     self.data_structure.insert(i,node)
-                    return
-                elif value == self.data_structure[i]["value"]:
-                    self.data_structure[ind][key] = value
                     return
             self.data_structure.append(node)
             
