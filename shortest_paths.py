@@ -7,6 +7,7 @@ Created on Sun Apr 19 21:29:50 2015
 
 import graph 
 import data_structures as ds
+import final_a_star.a_star as a_star 
 
 ''' 
 Abstract Class for Shortest Path Algorithms to implemenet
@@ -25,6 +26,8 @@ class ShortestPathsAlg(graph.Graph):
     '''
     def allDist(self): 
         pass 
+
+
     
 class ShortestPathsDijkstra(ShortestPathsAlg):
     ''' 
@@ -57,23 +60,28 @@ class ShortestPathsDijkstra(ShortestPathsAlg):
        # stores final distances behind wavefront
        dist = [sys.maxint] * self.num_stations
        
-       # nodes to be searched
-       searched = [False] * self.num_stations
+       # contains penultimate node on shortest path between source and sink
+       prev = [None] * self.num_stations
        dist[init] = 0
             
-        for i in range(0,self.num_stations):
+        while len(self.data_structure) > 0:
             
             min_adj, dist[min_adj] = self.data_structure.deleteMin()
-            
-            #pretend min_adj is index of next node
             searched[min_adj] = True
             
             for j,k in self.adj_list[min_adj].iteritems():
+                test_dist = k + dist[min_adj]
                 if not searched[j]:
-                    self.data_structure.insert(j, k + dist[min_adj])
-        return dist
+                    self.data_structure.insert(j, test_dist)
+                elif dist[j] > test_dist:
+                    dist[j] = test_dist
+                    self.data_structure.decreaseKey(j, test_dist)
+        # compile paths
                         
+    def allDist(self):
+        return None
 
 class ShortestPathsAStar(ShortestPathsAlg): 
     pass
 
+congestion = ShortestPathsAlg
