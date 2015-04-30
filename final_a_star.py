@@ -5,19 +5,23 @@ Created on Sat Apr 25 12:42:19 2015
 @author: Annie
 """
 import itertools
-import time
 
-def a_star(graph, start, goal):
+def a_star(graph, start, goal,named_list=False):
     if start==goal:
-        return([start])  
+        if named_list:
+            return graph.station_lookup[start]['Name']
+        else:
+            return([start])  
 
     agenda=[[start]]
     
     while len(agenda)!=0:   
         frontpath=agenda[0]
         if goal in frontpath:
-            return graph.nums_to_names(frontpath)
-
+            if named_list:
+                return graph.nums_to_names(frontpath)
+            else:
+                return frontpath
 #EXTEND THE FRONT PATH            
         neighbors=graph.adj_list[frontpath[-1]].keys()
         replacement=[]

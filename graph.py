@@ -44,6 +44,10 @@ import csv
 import numpy as np
 import networkx as nx 
 import matplotlib.pyplot as plt 
+import itertools
+from collections import Counter
+from scipy.sparse import csr_matrix
+from final_a_star import a_star as imported_a_star
 
 class Graph:
     ''' 
@@ -59,6 +63,15 @@ class Graph:
     #List of lists of integers. Entries are 0 if those two vertices don't have an edge between them, else entry is edge weight.
     #Example: [[0, 3, 5, 4], [3, 0, 0, 2], [5, 0, 0, 2], [4, 2, 2, 0]]
     adj_matrix = []
+    
+    def adj_matrix_to_list(self,adjacency_matrix):
+        adj_list = []        
+        for i in range(len(adjacency_matrix)):
+            neighbors = [j for j, e in enumerate(adjacency_matrix[i]) if e != 0]
+            neighbor_values =  filter(lambda b: b >0, adjacency_matrix[i])
+            dct = dict(zip(neighbors,neighbor_values))
+            adj_list.append(dct)
+        return adj_list
     
     # List of dictionaries allows us to lookup station information by index, such as station name, usage rate, coordinates
     #Example: [{'Usage': 50, 'Index': 0, 'Name': 'Harvard', 'Position': (0, 0)}, {'Usage': 20, 'Index': 1,
@@ -169,11 +182,20 @@ class Graph:
     '''
     Constructor
     '''
-    def __init__(self, file_name): 
-        self.adj_list, self.adj_matrix, self.station_lookup, self.index_lookup, \
-        self.num_stations = self.__readInput(file_name)
-        self.initializeGraph()
-        
+    def __init__(self,adj_matrix=None,file_name=None): 
+        if adj_matrix== None:        
+            self.adj_list, self.adj_matrix, self.station_lookup, self.index_lookup, \
+            self.num_stations = self.__readInput(file_name)
+            self.initializeGraph()
+        else :
+            self.adj_matrix=adj_matrix
+            self.adj_list = self.adj_matrix_to_list(self.adj_matrix)
+            self.graph_obj = nx.from_scipy_sparse_matrix(csr_matrix(adj_matrix))
+            self.num_stations = len(adj_matrix)
+            
+            
+    def a_star(self,start_index,end_index,named_list=False):
+        return imported_a_star(self,start_index,end_index,named_list)
         
     ''' 
     Returns an array where indices are station indices and values are names 
@@ -292,20 +314,53 @@ class Graph:
                 if self.adj_matrix[i][j] != 0: 
                     self.graph_obj.add_edge(i,j, weight = self.adj_matrix[i][j])
     
-    def draw(self): 
+    def calculateCongestion(self): 
+        cong = Counter()
+        for (one, two) in list(itertools.combinations(range(self.num_stations), 2)): 
+            one_pop = self.station_lookup[one]['Usage'] 
+            two_pop = self.station_lookup[one]['Usage'] 
+            path = self.a_star(one, two) 
+            for p in range(len(path) - 1): 
+                cong[(min(path[p], path[p+1]) , max(path[p], path[p+1]))] += (one_pop + two_pop)
+        
+        # normalizing the congestions to be between 0 and 1 
+        maximum = max(cong.values())     
+        
+        for key in cong.keys(): 
+            cong[key] /= float(maximum)
+            
+        self.congestion = cong 
+        
+    def draw(self, colorCalculation): 
+        if not hasattr(self, 'congestion'): 
+            self.calculateCongestion() 
+        
         pos={} 
         for i in range(self.num_stations): 
             pos[i] = self.station_lookup[i]['Position'] 
+            
+        # Colorful nodes representing the total usage of that station 
         for i in range(len(self.station_lookup)): 
             usage = self.station_lookup[i]['Usage']
             color = [usage/23000., np.sqrt(usage/23000.), 1 - usage/23000.]
-            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 40)
-        nx.draw_networkx_edges(self.graph_obj, pos)
-
-
+            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30)
         
-subway = Graph('BostonData.csv') 
-subway.draw()
+        for i in range(len(self.adj_list)): 
+            for j in self.adj_list[i].keys(): 
+                x = min(i,j) 
+                y = max(i,j)
+                c = self.congestion[(x,y)]
+                nx.draw_networkx_edges(self.graph_obj, pos, edgelist = [(x,y)], edge_color = [colorCalculation(c)], width = 4)
+#%% 
+subway = Graph(None,'BostonData.csv')               
+ #%%               
+def color(c): 
+    return [ 1 - (1-c) ** 5, 0.8, 0]   
+
+subway.draw(color)
+
 plt.savefig("path.png") # save as png
+plt.title("Boston Subway System")
 plt.show()
-# plt.show() # display
+
+#%%
