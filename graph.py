@@ -44,6 +44,9 @@ import csv
 import numpy as np
 import networkx as nx 
 import matplotlib.pyplot as plt 
+from scipy.sparse import csr_matrix
+from final_a_star import a_star as imported_a_star
+
 
 class Graph:
     ''' 
@@ -59,6 +62,15 @@ class Graph:
     #List of lists of integers. Entries are 0 if those two vertices don't have an edge between them, else entry is edge weight.
     #Example: [[0, 3, 5, 4], [3, 0, 0, 2], [5, 0, 0, 2], [4, 2, 2, 0]]
     adj_matrix = []
+    
+    def adj_matrix_to_list(self,adjacency_matrix):
+        adj_list = []        
+        for i in range(len(adjacency_matrix)):
+            neighbors = [j for j, e in enumerate(adjacency_matrix[i]) if e != 0]
+            neighbor_values =  filter(lambda b: b >0, adjacency_matrix[i])
+            dct = dict(zip(neighbors,neighbor_values))
+            adj_list.append(dct)
+        return adj_list
     
     # List of dictionaries allows us to lookup station information by index, such as station name, usage rate, coordinates
     #Example: [{'Usage': 50, 'Index': 0, 'Name': 'Harvard', 'Position': (0, 0)}, {'Usage': 20, 'Index': 1,
@@ -171,10 +183,20 @@ class Graph:
     '''
     __init__ function
     '''
-    def __init__(self, file_name): 
-        self.adj_list, self.adj_matrix, self.station_lookup, self.index_lookup, \
-        self.num_stations = self.__readInput(file_name)
-        self.initializeGraph()
+    def __init__(self,adj_matrix=None,file_name=None): 
+        if adj_matrix== None:        
+            self.adj_list, self.adj_matrix, self.station_lookup, self.index_lookup, \
+            self.num_stations = self.__readInput(file_name)
+            self.initializeGraph()
+        else :
+            self.adj_matrix=adj_matrix
+            self.adj_list = self.adj_matrix_to_list(self.adj_matrix)
+            self.graph_obj = nx.from_scipy_sparse_matrix(csr_matrix(adj_matrix))
+            self.num_stations = len(adj_matrix)
+            
+            
+    def a_star(self,start_index,end_index,named_list=False):
+        return imported_a_star(self,start_index,end_index,named_list)
         
         
     ''' 
@@ -300,7 +322,7 @@ class Graph:
             pos[i] = self.station_lookup[i]['Position'] 
         nx.draw(self.graph_obj, pos, node_size=60)
         
-subway = Graph('BostonData.csv') 
+subway = Graph(None,'BostonData.csv') 
 plt.figure(1)
 subway.draw()
 plt.savefig('test.png')
