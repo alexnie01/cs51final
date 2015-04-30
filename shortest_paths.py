@@ -7,6 +7,7 @@ Created on Sun Apr 19 21:29:50 2015
 
 import graph 
 import data_structures as ds
+import final_a_star.a_star as a_star 
 
 ''' 
 Abstract Class for Shortest Path Algorithms to implemenet
@@ -25,6 +26,8 @@ class ShortestPathsAlg(graph.Graph):
     '''
     def allDist(self): 
         pass 
+
+
     
 class ShortestPathsDijkstra(ShortestPathsAlg):
     ''' 
@@ -77,3 +80,4 @@ class ShortestPathsDijkstra(ShortestPathsAlg):
 class ShortestPathsAStar(ShortestPathsAlg): 
     pass
 
+congestion = ShortestPathsAlg

@@ -104,8 +104,6 @@ class Graph:
         
     def nums_to_names(self,index_list):
         return [self.station_lookup[num]['Name'] for num in index_list]
-
-
     
     ''' 
     Reads the graph in from a file and populates the instance 
@@ -169,7 +167,7 @@ class Graph:
         return (initialAdjList, initialAdjMatrix, initialStationLookup, initialIndexLookup, initialNumStations)
     
     '''
-    __init__ function
+    Constructor
     '''
     def __init__(self, file_name): 
         self.adj_list, self.adj_matrix, self.station_lookup, self.index_lookup, \
@@ -292,15 +290,22 @@ class Graph:
         for i in range(len(self.adj_matrix)):
             for j in range(len(self.adj_matrix[i])):
                 if self.adj_matrix[i][j] != 0: 
-                    self.graph_obj.add_edge(i,j)
+                    self.graph_obj.add_edge(i,j, weight = self.adj_matrix[i][j])
     
     def draw(self): 
         pos={} 
         for i in range(self.num_stations): 
             pos[i] = self.station_lookup[i]['Position'] 
-        nx.draw(self.graph_obj, pos, node_size=60)
+        for i in range(len(self.station_lookup)): 
+            usage = self.station_lookup[i]['Usage']
+            color = [usage/23000., np.sqrt(usage/23000.), 1 - usage/23000.]
+            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 40)
+        nx.draw_networkx_edges(self.graph_obj, pos)
+
+
         
 subway = Graph('BostonData.csv') 
-plt.figure(1)
 subway.draw()
-plt.savefig('test.png')
+plt.savefig("path.png") # save as png
+plt.show()
+# plt.show() # display
