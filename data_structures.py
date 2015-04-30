@@ -12,13 +12,15 @@ class DijkstraDataStructure:
     def __init__(self, graph): 
         self.name = "Default List Dijkstra's" 
         self.data_structure = [] 
+        # tracks index of key in data_structure
+        self.indices = [None] * self.num_stations
         
     def deleteMin(self): 
         pass 
-    '''
+
     def decreaseKey(self, key, new_value): 
         pass 
-    '''
+        
     def insert(self, key, value): 
         pass
 
@@ -28,71 +30,94 @@ class Priority(DijkstraDataStructure):
     '''
     def deleteMin(self):
         self.data_structure.pop(0)
+        # update index trackers
+        length = len(self.indices)
+        for i in range(0,length):
+            if self.indices[i] != None:
+                self.indices -= 1
     # performs insertion sort with new node    
     def insert(self, key, value):
-        node = {"key":key, "value":value}
+        node = (key, value)
         if len(self.data_structure = 0):
             self.data_structure.append(node)
+            self.indices[key] = 0
         else:
-            length = len(self.data_structure)
-            for i in range(0, length):
-                if value <= self.data_structure[i]["value"]:
-                    self.data_structure.insert(i,node)
-                    return
             self.data_structure.append(node)
+            self.push_up(len(self.data_structure))
             
-class BinaryHeap(DijkstraDataStructure): 
+    def push_up(self, position):
+        key, value = self.data_structure[position]
+        new_position = position
+        while new_position > -1 and value <= self.data_structure[new_position - 1][1]:
+            self.indices[self.data_structure[new_position - 1][0]] += 1
+            new_position -= 1
+        self.data_structure.pop(position)
+        self.data_structure.insert(new_postion, (key, value))
+        self.indices[key] = new_position
+            
+    def decreaseKey(self, key, new_value):
+        position = self.indices[key]
+        if new_value < self.data_structure[position][1]:
+            self.data_structure[position] = (key, new_value)
+            self.push_up(position)
+            
+class DaryHeap(DijkstraDataStructure): 
     '''
-    Binary Heap for Dijkstra's Algorithm
+    Dary Heap for Dijkstra's Algorithm
     '''
-    def __init__(self,graph):
+    def __init__(self, graph, d):
         super(BinaryHeap, self).__init__(graph)
         self.name = "Binary Heap Dijkstra's"
-        
-    # swap two elements of the data structure
+        self.d = d
+    # swap two elements of the data structure and update their indices
     def swap(self, ind1, ind2):
         temp = self.data_structure[ind1]
         self.data_structure[ind1] = self.data_structure[ind2]
         self.data_structure[ind2] = temp
-    # pushes inserted node up the tree. note that the old length becomes
-    # the index of the new node on first call
-    def upper(self, ind):
-
-        par = ind%2 == 0
         
-        while ind//2 > 0:
-            # takes care of two cases in which we need to perform parent-child
-            # swapping: greater left-child and smaller right-child
-            if self.data_structure[ind]["value"] > self.data_structure[ind//2]["value"] != par:
-                self.swap(ind, ind//2)
-                ind//=2
-                par = ind%2 == 0
-            else:
-                break
-        self.downer(ind)
-         
-    def downer(self, ind):
-        while ind < len(self.data_structure):
-            if self.data_structure[ind]["value"] <= self.data_structure[2 * ind]["value"]:
-                self.swap(ind, 2*ind)
-                ind *= 2
-            elif self.data_structure[ind]["value"] >= self.data_structure[2 * ind + 1]["value"]:
-                self.swap(ind, 2 * ind + 1)
-                ind = 2 * ind + 1
-            else:
-                break
+    # compares child to parent in case child needs to swap with parent    
+    def push_up(self, position):
+        key, value = self.data_structure[position]
+        parent = self.data_structure[position//self.d]  
+        
+        while value < parent[1]:
+            self.swap(position, position//self.d)
+            self.indices[parent[0]] = position
+            position //= self.d
+            self.indices[key] = position
+            parent = self.data_structure[position//self.d]
             
     def insert(self, key, value):
+        node = (key, value)
+        position = len(self.data_structure)
+        self.data_structure.append(node)
+        self.push_up(position)
+            
+    def deleteMin(self):
         length = len(self.data_structure)
         if length == 0:
-            self.data_structure.append({"key":key, "value":value, "left":None, "right":None})
-        else:
-            node = {key:value}
-            self.data_structure.append(node)
-            self.upper(length)
-            
-class Fib(DijkstraDataStructure):
-    ''' 
-    Fibonacci Heap for Dijkstra's Algorithm
-    '''
-    pass
+            return None
+        self.swap(0,-1)
+        min_node = self.data_structure.pop()
+        position = 0
+        # log condition checks if node has reached bottom branch, 
+        while int(math.log(length,d)) - int(math.log(position,d)) > 0:
+            best_child = None
+            best_child_value = sys.maxint
+            for i in range(0,d):
+                test_value = self.data_structure[d * position + i][1]
+                if test_value < min(self.data_structure[position][1], 
+                                    best_child_value):
+                    best_child = d * position + i
+                    best_child_value = test_value
+            if best_child != None:
+                self.swap(position, best_child)
+                self.indices[self.data_structure[best_child][0]] = position
+                position = best_child
+                self.indices[min_node[0]] = position
+            return min_node
+    def decreaseKey(self, key, new_value):
+        position = self.indices[key]
+        if new_value < self.data_structure[position][1]:
+            self.data_structure[position] = (key, new_value)
+            self.push_up(position)
