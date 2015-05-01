@@ -59,13 +59,15 @@ class Priority(DijkstraDataStructure):
             self.data_structure.append(node)
             self.indices[key] = length
             self.push_up(length)
-            
+    # rebalancing method
     def push_up(self, position):
         key, value = self.data_structure[position]
         new_position = 0
+        # find smallest node greater than our pushed node
         for new_position in range(0, position):
             if value <= self.data_structure[new_position][1]:
                 break
+        # update indices of nodes between our new and old position
         for i in range(new_position, position):
             self.indices[self.data_structure[i][0]] += 1
         self.data_structure.pop(position)
@@ -74,13 +76,13 @@ class Priority(DijkstraDataStructure):
     
 class DaryHeap(DijkstraDataStructure): 
     '''
-    Dary Heap for Dijkstra's Algorithm
+    d-ary Heap for Dijkstra's Algorithm
     '''
     def __init__(self, graph, d = 2):
         DijkstraDataStructure.__init__(self,graph)
-        self.name = "Binary Heap Dijkstra's"
+        self.name = "d-ary Heap Dijkstra's"
         self.d = d
-    # swap two elements of the data structure and update their indices
+    # swap two elements of the priority queue
     def swap(self, ind1, ind2):
         temp = self.data_structure[ind1]
         self.data_structure[ind1] = self.data_structure[ind2]
@@ -91,8 +93,7 @@ class DaryHeap(DijkstraDataStructure):
         if position == 0:
             return
         key, value = self.data_structure[position]
-        parent = self.data_structure[(position-1)//self.d]  
-        
+        parent = self.data_structure[(position-1)//self.d]
         while value < parent[1] and position != 0:
             self.swap(position, (position-1)//self.d)
             self.indices[parent[0]] = position
@@ -106,23 +107,20 @@ class DaryHeap(DijkstraDataStructure):
         self.data_structure.append(node)        
         self.indices[key] = position
         self.push_up(position)
-    # pops minimum value from heap and rebalances        
     def deleteMin(self):
         length = len(self.data_structure)
         if length == 0:
             return None
-            # if our heap was initially empty, should fail
-        self.swap(0,-1)
-        
+        self.swap(0,-1)        
         min_node = self.data_structure.pop()
         length -= 1
         self.indices[min_node[0]] = None
         position = 0
         if length == 0:
-            self.indices[min_node[0]] = None
             return min_node
-        # log condition checks if node has reached bottom branch
+        # log condition checks if node has reached bottom level of heap
         while position == 0 or int(math.log(length, self.d)) - int(math.log(position + 1, self.d)) > 0:
+            # determine child with smallest value
             best_child = None
             best_child_value = float("inf")
             search = (length - 1)%self.d
@@ -136,6 +134,7 @@ class DaryHeap(DijkstraDataStructure):
                                     best_child_value):
                     best_child = self.d * position + i
                     best_child_value = test_value
+            # if needed, swap with smallest child
             if best_child != None:
                 self.indices[self.data_structure[best_child][0]] = position
                 self.swap(position, best_child)

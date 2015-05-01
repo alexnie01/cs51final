@@ -408,7 +408,7 @@ class Graph:
             color = [usage/23000., np.sqrt(usage/23000.), 1 - usage/23000.]
             nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30, with_labels=False)
         ''' 
-        nx.draw_networkx_nodes(self.graph_obj, pos, node_size = 30, node_color = 'b')
+        nx.draw_networkx_nodes(self.graph_obj, pos, node_size = 30, node_color = 'w')
 
         for i in range(len(self.adj_list)): 
             for j in self.adj_list[i].keys(): 
