@@ -321,7 +321,7 @@ class Graph:
             two_pop = self.station_lookup[one]['Usage'] 
             path = self.a_star(one, two) 
             for p in range(len(path) - 1): 
-                cong[(min(path[p], path[p+1]) , max(path[p], path[p+1]))] += (one_pop + two_pop)
+                cong[(min(path[p], path[p+1]) , max(path[p], path[p+1]))] += (min([one_pop,two_pop]))
         
         # normalizing the congestions to be between 0 and 1 
         maximum = max(cong.values())     
@@ -329,10 +329,10 @@ class Graph:
         for key in cong.keys(): 
             cong[key] /= float(maximum)
             
-        self.congestion = cong 
+        self.congestion = cong  
         
-    def draw(self, colorCalculation): 
-        if not hasattr(self, 'congestion'): 
+    def draw(self, colorCalculation, recalculate = False): 
+        if recalculate or not hasattr(self, 'congestion'): 
             self.calculateCongestion() 
         
         pos={} 
@@ -352,15 +352,17 @@ class Graph:
                 c = self.congestion[(x,y)]
                 nx.draw_networkx_edges(self.graph_obj, pos, edgelist = [(x,y)], edge_color = [colorCalculation(c)], width = 4)
 #%% 
-subway = Graph(None,'BostonData.csv')               
- #%%               
-def color(c): 
-    return [ 1 - (1-c) ** 5, 0.8, 0]   
-
-subway.draw(color)
-
-plt.savefig("path.png") # save as png
-plt.title("Boston Subway System")
-plt.show()
+                
+def main():
+    subway = Graph(None,'BostonData.csv')               
+     #%%               
+    def color(c): 
+        return [ 1 - (1-c) ** 10, 0.8, 0.3]   
+    
+    subway.draw(color)
+    
+    plt.savefig("path.png") # save as png
+    plt.title("Boston Subway System")
+    plt.show()
 
 #%%
