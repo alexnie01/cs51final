@@ -94,6 +94,8 @@ class Graph:
     # Number of stations in the network 
     num_stations = 0 
     
+    congestion = {}
+    
     graph_obj = nx.Graph()
     
     '''
@@ -353,8 +355,10 @@ class Graph:
             
         self.congestion = cong  
         
-    def draw(self, colorCalculation, congestion = True, recalculate = False):
-        
+    def draw(self, colorCalculation, recalculate = False): 
+        if recalculate or len(self.congestion) == 0: 
+            self.calculateCongestion() 
+
         pos={} 
         for i in range(self.num_stations): 
             pos[i] = self.station_lookup[i]['Position']        
@@ -372,8 +376,9 @@ class Graph:
         for i in range(len(self.station_lookup)): 
             usage = self.station_lookup[i]['Usage']
             color = [usage/23000., np.sqrt(usage/23000.), 1 - usage/23000.]
-            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30)
-        
+            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30,with_labels=False)
+#            nx.draw_networkx_labels(self,pos,labels = [i],font_size=1000)
+
         for i in range(len(self.adj_list)): 
             for j in self.adj_list[i].keys(): 
                 x = min(i,j) 
@@ -382,21 +387,125 @@ class Graph:
                 nx.draw_networkx_edges(self.graph_obj, pos, edgelist = [(x,y)], edge_color = [colorCalculation(c)], width = 4)
 #%% 
                 
-def main():
-    subway = Graph(None,'BostonData.csv')               
-    #%%               
-    def color(c): 
-        return [ 1 - (1-c) ** 10, 0.8, 0.3]   
-    
-    subway.draw(color)
-    
-    plt.savefig("path.png") # save as png
-    plt.title("Boston Subway System")
-    plt.show()
+#Computes Z-score for each edge's congestion. If it's negative, make the factor 1. Else, take Z-score and add 1 and square
+#root it for the multiply factor. Adjust weights and rerun shortest paths/congestion map. Do for n times.
 
-    #%%
-def f():
-    return []   
-#paris=Graph(None,'paris_orig.csv')
-#plt.savefig("paris.pdf")
-#plt.show()
+#Note: if n=0, then it just runs shortest paths and draws the congestion map. The distances between stations are then not a
+#function of congestion, but only the geographical distance.
+
+def runCongestionAdjusted (g, n):
+    
+    numIterLeft = n
+    g.calculateCongestion()
+    
+    while (numIterLeft > 0):
+
+        congestions = g.congestion
+
+        #Compute average and standard deviation of congestion numbers
+        thesum = 0.0
+        for i in congestions:
+            thesum = thesum + congestions[i]
+        average = thesum / g.num_stations
+
+        sumsquares = 0.0
+        for i in congestions:
+            sumsquares = sumsquares + ((congestions[i] - average) * (congestions[i] - average))
+        sdeviation = (1.0 / g.num_stations) * sumsquares
+
+        #Update edge weights by multiplying by transformation of Z-score, if the Z-score is positive
+        for aTuple in congestions:
+            zscore = (congestions[aTuple] - average) / sdeviation
+            
+            if zscore > 0:
+            
+                index1 = aTuple[0]
+                index2 = aTuple[1]
+
+                oldweight = g.adj_matrix[index1][index2]
+                
+                #Multiply by sqrt(Z-score +1)
+                g.adj_matrix[index1][index2] = oldweight * np.sqrt(zscore + 1.0)
+                g.adj_matrix[index2][index1] = oldweight * np.sqrt(zscore + 1.0)
+                g.adj_list[index1][index2] = oldweight * np.sqrt(zscore + 1.0)
+                g.adj_list[index2][index1] = oldweight * np.sqrt(zscore + 1.0)
+        
+        #Update congestion edge weights using shortest path algorithms
+        g.calculateCongestion()
+          
+        #Count how many iterations left to do
+        numIterLeft = numIterLeft - 1
+    
+    #Draw the new graph congestion map
+    g.draw(color)
+
+def main():
+
+    file_name = ''
+    print "Would you like Boston (B) or Paris (P)?" 
+    answer = get_user_input(['B', 'P'])
+    if (answer == 0): 
+        file_name = 'BostonData.csv' 
+    elif (answer == 1):
+        file_name = 'paris_orig.csv' 
+    
+    subway = Graph(None, file_name)       
+
+    def color(c): 
+        return [ 1 - (1-c) ** 5, 0.8, 0.3]      
+    
+    print '''What would you like to do? \n 
+    - Display a Congestion Map (Type 'D') 
+    - Try Adding a New Edge (Type: 'A') 
+    - Run Simulation (Type: 'S')
+    '''
+    answer = get_user_input(['D', 'A', 'S'])
+    if answer == 0: 
+        subway.draw(color)
+        plt.savefig("path.png") # save as png
+        plt.title("Congestion Map")
+        plt.show() 
+        return subway
+    elif answer == 1: 
+        print 'Type the name of the first station'  
+        while (True): 
+            try: 
+                station1 = raw_input() 
+                subway.index_lookup[station1]
+                break 
+            except KeyError: 
+                print 'Sorry, that was not a valid station name'
+                
+        print 'Type the name of the second station'  
+        while (True): 
+            try: 
+                station2 = raw_input() 
+                subway.index_lookup[station2]
+                break 
+            except KeyError: 
+                print 'Sorry, that was not a valid station name'
+        
+        print 'Calculating...' 
+        
+        subway.add_route(station1, station2) 
+        subway.draw(color, True)
+        
+        return subway
+    elif answer == 2: 
+        runCongestionAdjusted(subway, 1)
+
+#%%
+
+def get_user_input(possible_answers):  
+    while True: 
+        user_input = raw_input() 
+        try: 
+            return possible_answers.index(user_input)
+        except ValueError :
+            print "Sorry, I didn't quite get that" 
+
+
+#%%
+if __name__ == "__main__":
+    s = main()
+
