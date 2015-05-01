@@ -221,6 +221,8 @@ class Graph:
         dist, path = path_finder.extract_path(init,dest)
         if testing:
             return dist
+        if named_list:
+            return self.nums_to_names(path)
         return path
         
     ''' 
@@ -357,7 +359,7 @@ class Graph:
             path_finder.allDist()
         else:
             dijkstra = False
-            print "This may take a while. Do not try on Paris!"
+            print "Using A*. This may take a while. Recommended for Boston only"
 
 
         for (one, two) in station_pairs: 
