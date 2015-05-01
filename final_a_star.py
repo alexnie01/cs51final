@@ -7,6 +7,7 @@ Created on Sat Apr 25 12:42:19 2015
 import itertools
 
 def a_star(graph, start, goal,named_list=False,testing=False):
+    
     if start==goal:
         if named_list:
             return graph.station_lookup[start]['Name']
