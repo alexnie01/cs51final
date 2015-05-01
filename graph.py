@@ -86,6 +86,8 @@ class Graph:
     # Number of stations in the network 
     num_stations = 0 
     
+    congestion = {}
+    
     graph_obj = nx.Graph()
     
     '''
@@ -332,7 +334,7 @@ class Graph:
         self.congestion = cong  
         
     def draw(self, colorCalculation, recalculate = False): 
-        if recalculate or not hasattr(self, 'congestion'): 
+        if recalculate or len(self.congestion) == 0: 
             self.calculateCongestion() 
         
         pos={} 
@@ -354,15 +356,69 @@ class Graph:
 #%% 
                 
 def main():
-    subway = Graph(None,'BostonData.csv')               
-     #%%               
+    file_name = ''
+    print "Would you like Boston (B) or Paris (P)?" 
+    answer = get_user_input(['B', 'P'])
+    if (answer == 0): 
+        file_name = 'BostonData.csv' 
+    elif (answer == 1):
+        file_name = 'paris_orig.csv' 
+    
+    subway = Graph(None, file_name)       
+    
     def color(c): 
-        return [ 1 - (1-c) ** 10, 0.8, 0.3]   
+        return [ 1 - (1-c) ** 5, 0.8, 0.3]      
     
-    subway.draw(color)
-    
-    plt.savefig("path.png") # save as png
-    plt.title("Boston Subway System")
-    plt.show()
+    print '''What would you like to do? \n 
+    - Display a Congestion Map (Type 'D') 
+    - Try Adding a New Edge (Type: 'A') 
+    - Run Simulation (Type: 'S')
+    '''
+    answer = get_user_input(['D', 'A', 'S'])
+    if answer == 0: 
+        subway.draw(color)
+        plt.savefig("path.png") # save as png
+        plt.title("Congestion Map")
+        plt.show() 
+        return subway
+    elif answer == 1: 
+        print 'Type the name of the first station'  
+        while (True): 
+            try: 
+                station1 = raw_input() 
+                subway.index_lookup[station1]
+                break 
+            except KeyError: 
+                print 'Sorry, that was not a valid station name'
+                
+        print 'Type the name of the second station'  
+        while (True): 
+            try: 
+                station2 = raw_input() 
+                subway.index_lookup[station2]
+                break 
+            except KeyError: 
+                print 'Sorry, that was not a valid station name'
+        
+        print 'Calculating...' 
+        
+        subway.add_route(station1, station2) 
+        subway.draw(color, True)
+        
+        return subway
+    elif answer == 2: 
+        pass
 
 #%%
+
+def get_user_input(possible_answers):  
+    while True: 
+        user_input = raw_input() 
+        try: 
+            return possible_answers.index(user_input)
+        except ValueError :
+            print "Sorry, I didn't quite get that" 
+
+#%%
+if __name__ == "__main__":
+    s = main()
