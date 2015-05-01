@@ -340,10 +340,16 @@ class Graph:
     
     def calculateCongestion(self): 
         cong = Counter()
+        path_finder = ShortestPathsDijkstra(self,'heap', 4)
+        path_finder.allDist()
         for (one, two) in list(itertools.combinations(range(self.num_stations), 2)): 
             one_pop = self.station_lookup[one]['Usage'] 
             two_pop = self.station_lookup[one]['Usage'] 
-            path = self.a_star(one, two,False,False) 
+            path = self.a_star(one, two,False,False)
+            print "extracting shortest path between ", one, " and ", two
+            print "\npath from a_star is \n", path
+            dist, path = path_finder.extract_path(one, two)
+            print "\npath from dijkstra is \n", path
             for p in range(len(path) - 1): 
                 cong[(min(path[p], path[p+1]) , max(path[p], path[p+1]))] += (min([one_pop,two_pop]))
         
@@ -363,15 +369,13 @@ class Graph:
         for i in range(self.num_stations): 
             pos[i] = self.station_lookup[i]['Position']        
             
-        if not congestion: 
+        if not self.congestion: 
             nx.draw(self.graph_obj, pos, node_size = 15) 
             return 
             
         if recalculate or not hasattr(self, 'congestion'): 
             self.calculateCongestion() 
         
-
-            
         # Colorful nodes representing the total usage of that station 
         for i in range(len(self.station_lookup)): 
             usage = self.station_lookup[i]['Usage']
