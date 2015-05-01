@@ -48,6 +48,7 @@ import itertools
 from collections import Counter
 from scipy.sparse import csr_matrix
 from final_a_star import a_star as imported_a_star
+from shortest_paths import ShortestPathsDijkstra
 
 """FOR THE SAKE OF PROVIDING HEURISTIC FOR TESTING SHORTEST PATH ON 
 RANDOM ADJACENCEY MATRICES. NOT CHEATING"""
@@ -206,8 +207,17 @@ class Graph:
             self.testing = True
             
             
-    def a_star(self,start_index,end_index,named_list,testing):
+    def a_star(self,start_index,end_index, named_list, testing):
         return imported_a_star(self,start_index,end_index,named_list,self.testing)
+        
+    def dijkstra(self, init, dest, data_structure, d = None,
+                 named_list = False, testing = True):
+        path_finder = ShortestPathsDijkstra(self, data_structure, d)
+        path_finder.allDist()
+        dist, path = path_finder.extract_path(init,dest)
+        if testing:
+            return dist
+        return path
         
     ''' 
     Returns an array where indices are station indices and values are names 
