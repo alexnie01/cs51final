@@ -263,6 +263,9 @@ class Graph:
         print "Adjacency List: "
         for entry in self.adj_list:
             print entry
+            
+    def print_stations(self):
+        print self.index_lookup
     
     ''' 
     Given a new station name, its usage, coordinates, a list of its neighbors by name,
@@ -479,6 +482,7 @@ def main():
     while (True):
         print '''What would you like to do? \n 
         - See the Graph             (Type: 'G')
+        - See the List of Stations  (Type: 'L')
         - Display a Congestion Map  (Type: 'D') 
         - Try Adding a New Edge     (Type: 'A') 
         - Run Simulation            (Type: 'S')
@@ -486,7 +490,7 @@ def main():
         - Change the Algorithm      (Type: 'E')
         - Exit                      (Type: 'Q')
         '''
-        answer = get_user_input(['G', 'D', 'A', 'S', 'R','E', 'Q'])
+        answer = get_user_input(['G', 'L','D', 'A', 'S', 'R','E', 'Q'])
 
         if answer == 0: 
             print "Drawing Subway Map..."
@@ -494,15 +498,18 @@ def main():
 
             plt.title("Subway Map")
             plt.show() 
+        elif answer == 1:
+            print "List of Stations"
+            print subway.get_names()
 
-        elif answer == 1: 
+        elif answer == 2: 
             print "Drawing Congestion Map..."
             subway.draw(color, algorithm = algorithm_name)
             plt.savefig("path.png") # save as png
             plt.title("Congestion Map")
             plt.show() 
 
-        elif answer == 2: 
+        elif answer == 3: 
             print 'Type the name of the first station'  
             station1, station2 = get_two_stations(subway)
             
@@ -515,14 +522,14 @@ def main():
             plt.title("Simulation Results")
             plt.show()
 
-        elif answer == 3: 
+        elif answer == 4: 
             print "Simulating time..."
             runCongestionAdjusted(subway)
             subway.draw(color, recalculate = True, algorithm = algorithm_name)
             plt.title("Simulation Results")
             plt.show() 
 
-        elif answer == 4: 
+        elif answer == 5: 
             subway.calculateCongestion()
             station1, station2 = get_two_stations(subway)
             path = subway.a_star(subway.index_lookup[station1], subway.index_lookup[station2], False,False)
@@ -533,7 +540,7 @@ def main():
             print 'We recommend you take this path:' 
             print result
 
-        elif answer == 5: 
+        elif answer == 6: 
             print 'The current algorithm you are using is %s ' % algorithm_name 
             print '''
             What would you like to change it to?
@@ -549,7 +556,7 @@ def main():
             elif answer == 2: 
                 algorithm_name = 'astar'
 
-        elif answer == 6:
+        elif answer == 7:
             print 'Thanks for using our application! ' 
             return 
 #%%
