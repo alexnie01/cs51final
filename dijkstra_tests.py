@@ -31,8 +31,6 @@ def test_version(graph,starting_index,ending_index):
     
 def my_version(graph, init, dest, struct, d, namedList = False, testing = True):
     return graph.dijkstra(init, dest, struct, d, namedList, testing)
-   
-N=30
 """Number of nodes in test graph """
 
 if __name__ == "__main__":
@@ -46,17 +44,20 @@ if __name__ == "__main__":
     init = input("Index to start at?")
     dest = input("Destination index?")
     '''
-    d = 2
-    N = 10
+    d = 3
+    N = 7
     tests = 1
     struct = 'heap'
     init = 1
-    dest = 9
+    dest = 6
     
     for i in range(0, tests):
         random_graph = gen_random_adj_matrix(N)
         test_graph = Graph(random_graph, None)
-        print float(my_version(test_graph, init, dest, struct, d, testing = True)) == test_version(test_graph, init, dest)
+        a = test_version(test_graph, init, dest)
+        b = float(my_version(test_graph, init, dest, struct, d, testing = True))
+        print "a is ", a, ". b is ", b
+        print a == b
 
     
     

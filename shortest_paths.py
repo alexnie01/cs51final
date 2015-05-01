@@ -7,7 +7,7 @@ Created on Sun Apr 19 21:29:50 2015
  
 import data_structures as ds
 import sys
-
+from pprint import pprint
     
 class ShortestPathsDijkstra:
     ''' 
@@ -45,6 +45,7 @@ class ShortestPathsDijkstra:
         dist = [sys.maxint] * self.num_stations
         # stores whether a node has been searched
         searched = [False] * self.num_stations
+        searched[init] = True
         # contains penultimate node on shortest path between source and sink
         prev = [None] * self.num_stations
         dist[init] = 0
@@ -52,13 +53,13 @@ class ShortestPathsDijkstra:
             print "------------Step-------------"
             min_adj, dist[min_adj] = self.ds.deleteMin()
             print "pulled ", min_adj, " from list"
-            print "adjacent nodes found were ", self.adj_list[min_adj].keys()
+            print "adjacent nodes are"
+            pprint(self.adj_list[min_adj])
             for j,k in self.adj_list[min_adj].iteritems():
-                print "exploring neighbor ", j, " with distance ", k, "of ", min_adj
                 test_dist = k + dist[min_adj]
                 if not searched[j]:
                     print j, " previously not searched. Inserting into heap."
-                    searched[min_adj] = True
+                    searched[j] = True
                     self.ds.insert(j, test_dist)
                     prev[j] = min_adj
                     dist[j] = test_dist
@@ -75,14 +76,27 @@ class ShortestPathsDijkstra:
     def allDist(self):
         for i in range(0, self.num_stations):
             self.singleSourceDist(i)
-        
-    def extact_path(self, init, dest):
+        print "adjacency list is "
+        pprint(self.adj_list)
+        print "prev array is now ", 
+        pprint(self.prev_array)
+        print "dist array is now "
+        pprint(self.dist_array)
+    def extract_path(self, init, dest):
+        aloha = raw_input("Continue?")
         print "extracting path between ", init, " and ", dest
+        print "prev_array is "
+        pprint(self.prev_array)
         path = []
         to_node = init
         while to_node != dest:
+            aloha = raw_input("Continue?")
             path.append(to_node)
+            print "dest is ", dest, " and init is ", init
             to_node = self.prev_array[dest][init]
-        path.append[dest]
+            init = to_node
+            print "path is currently ", path
+            print "to_node is currently ", to_node
+        path.append(dest)
         print "path is ", path
         return self.dist_array[init][dest], path
