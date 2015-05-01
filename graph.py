@@ -352,11 +352,11 @@ class Graph:
         if algorithm == 'dijkstra-dheap':
             path_finder = ShortestPathsDijkstra(self,'heap', 2)
             path_finder.allDist()
-        elif algorithm == 'dijkstra-priority' 
+        elif algorithm == 'dijkstra-priority': 
             path_finder = ShortestPathsDijkstra(self, 'priority')
             path_finder.allDist()
-        else 
-            dijkstra = Falses
+        else: 
+            dijkstra = False
             print "This may take a while, especially on Paris"
 
         for (one, two) in station_pairs: 
@@ -487,7 +487,7 @@ def main():
         if answer == 0: 
             print "Drawing Subway Map..."
             subway.draw(color, False, False)  
-            plt.title("Subwa Map")
+            plt.title("Subway Map")
             plt.show() 
 
         elif answer == 1: 
