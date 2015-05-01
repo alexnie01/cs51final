@@ -345,14 +345,10 @@ class Graph:
             
         self.congestion = cong  
         
-<<<<<<< HEAD
     def draw(self, colorCalculation, recalculate = False): 
         if recalculate or len(self.congestion) == 0: 
             self.calculateCongestion() 
-=======
-    def draw(self, colorCalculation, congestion = True, recalculate = False):
->>>>>>> 77fb9d691bb7a1c6b8378c60fe1081bfc22edf43
-        
+
         pos={} 
         for i in range(self.num_stations): 
             pos[i] = self.station_lookup[i]['Position']        
@@ -382,7 +378,7 @@ class Graph:
 #%% 
                 
 def main():
-<<<<<<< HEAD
+
     file_name = ''
     print "Would you like Boston (B) or Paris (P)?" 
     answer = get_user_input(['B', 'P'])
@@ -392,13 +388,7 @@ def main():
         file_name = 'paris_orig.csv' 
     
     subway = Graph(None, file_name)       
-=======
-    subway = Graph(None,'BostonData.csv')               
-    #%%               
-    def color(c): 
-        return [ 1 - (1-c) ** 10, 0.8, 0.3]   
->>>>>>> 77fb9d691bb7a1c6b8378c60fe1081bfc22edf43
-    
+
     def color(c): 
         return [ 1 - (1-c) ** 5, 0.8, 0.3]      
     
