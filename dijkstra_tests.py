@@ -33,31 +33,21 @@ def my_version(graph, init, dest, struct, d, namedList = False, testing = True):
     return graph.dijkstra(init, dest, struct, d, namedList, testing)
 """Number of nodes in test graph """
 
-if __name__ == "__main__":
-    '''
-    d = None
-    N = input("How many nodes would you like to test?")
-    tests = input("How many tests would you like to run?")
-    struct = raw_input("Store as naive list ('priority') or binary heap ('heap')?")
-    if struct == 'heap':
-        d = input("How many children per node?")
-    init = input("Index to start at?")
-    dest = input("Destination index?")
-    '''
-    d = 3
-    N = np.random.randint(0,50)
+if __name__ == "__main__":    
+    N = 50
     tests = 20
-    struct = 'heap'
-    init = np.random.randint(0,N)
-    dest = np.random.randint(0,N)
+    struct = 'priority'
     
     for i in range(0, tests):
+        d = np.random.randint(2,6)
+        init = np.random.randint(0,N)
+        dest = np.random.randint(0,N)        
         random_graph = gen_random_adj_matrix(N)
         test_graph = Graph(random_graph, None)
         a = test_version(test_graph, init, dest)
         b = float(my_version(test_graph, init, dest, struct, d, testing = True))
-        print "a is ", a, ". b is ", b
-        assert(a == b)
+        assert(a==b)
+        print "success!"
 
     
     
