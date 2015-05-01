@@ -359,6 +359,7 @@ class Graph:
             dijkstra = False
             print "This may take a while. Do not try on Paris!"
 
+
         for (one, two) in station_pairs: 
 
             one_pop = self.station_lookup[one]['Usage'] 
@@ -488,6 +489,7 @@ def main():
         if answer == 0: 
             print "Drawing Subway Map..."
             subway.draw(color, congestion = False)  
+
             plt.title("Subway Map")
             plt.show() 
 
