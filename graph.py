@@ -364,3 +364,4 @@ plt.title("Boston Subway System")
 plt.show()
 
 #%%
+paris=Graph(None,'paris_orig.csv')
