@@ -50,8 +50,10 @@ from scipy.sparse import csr_matrix
 from final_a_star import a_star as imported_a_star
 from shortest_paths import ShortestPathsDijkstra
 
-"""FOR THE SAKE OF PROVIDING HEURISTIC FOR TESTING SHORTEST PATH ON 
-RANDOM ADJACENCEY MATRICES. NOT CHEATING"""
+'''
+FOR THE SAKE OF PROVIDING HEURISTIC FOR TESTING SHORTEST PATH ON 
+RANDOM ADJACENCEY MATRICES. NOT CHEATING
+'''
 from scipy.sparse.csgraph import shortest_path 
 
 
@@ -72,15 +74,6 @@ class Graph:
     #Example: [[0, 3, 5, 4], [3, 0, 0, 2], [5, 0, 0, 2], [4, 2, 2, 0]]
     adj_matrix = []
     
-    def adj_matrix_to_list(self,adjacency_matrix):
-        adj_list = []        
-        for i in range(len(adjacency_matrix)):
-            neighbors = [j for j, e in enumerate(adjacency_matrix[i]) if e != 0]
-            neighbor_values =  filter(lambda b: b >0, adjacency_matrix[i])
-            dct = dict(zip(neighbors,neighbor_values))
-            adj_list.append(dct)
-        return adj_list
-    
     # List of dictionaries allows us to lookup station information by index, such as station name, usage rate, coordinates
     #Example: [{'Usage': 50, 'Index': 0, 'Name': 'Harvard', 'Position': (0, 0)}, {'Usage': 20, 'Index': 1,
     #'Name': 'Central', 'Position': (0, 2)}, {'Usage': 90, 'Index': 2, 'Name': 'Park Street', 'Position': (0, 4)},
@@ -98,6 +91,15 @@ class Graph:
     
     graph_obj = nx.Graph()
     
+    def adj_matrix_to_list(self,adjacency_matrix):
+        adj_list = []        
+        for i in range(len(adjacency_matrix)):
+            neighbors = [j for j, e in enumerate(adjacency_matrix[i]) if e != 0]
+            neighbor_values =  filter(lambda b: b >0, adjacency_matrix[i])
+            dct = dict(zip(neighbors,neighbor_values))
+            adj_list.append(dct)
+        return adj_list
+
     '''
     Computes Cartesian distance (edge weight) given coordinate positions of two stations. Rounds up by taking floor and adding
     1. Edge weight is always at least 1.
@@ -107,7 +109,7 @@ class Graph:
         x2 = float(position1[1])
         y1 = float(position2[0])
         y2 = float(position2[1])
-        dist = np.floor(np.sqrt(((x1 - y1)*(x1 - y1)) + ((x2 - y2)*(x2 - y2)))) + 1.0
+        dist = np.floor(np.sqrt(((x1 - y1)*(x1 - y1)) + ((x2 - y2)*(x2 - y2)))) + 1.0 # positive only
         
         return (int(dist))
     
@@ -209,8 +211,8 @@ class Graph:
             self.testing = True
             
             
-    def a_star(self,start_index,end_index, named_list, testing):
-        return imported_a_star(self,start_index,end_index,named_list,self.testing)
+    def a_star(self,start_index,end_index, named_list, testing = False):
+        return imported_a_star(self,start_index,end_index,named_list,testing)
         
     def dijkstra(self, init, dest, data_structure, d = None,
                  named_list = False, testing = True):
@@ -338,55 +340,75 @@ class Graph:
                 if self.adj_matrix[i][j] != 0: 
                     self.graph_obj.add_edge(i,j, weight = self.adj_matrix[i][j])
     
-    def calculateCongestion(self): 
+    def calculateCongestion(self, algorithm = 'dijkstra-dheap'): 
+        print 'Calculating Congestions'
         cong = Counter()
+
         station_pairs = list(itertools.combinations(range(self.num_stations), 2))
+        
         count = 0 
+        dijkstra = True
+
+        if algorithm == 'dijkstra-dheap':
+            path_finder = ShortestPathsDijkstra(self,'heap', 2)
+            path_finder.allDist()
+        elif algorithm == 'dijkstra-priority' 
+            path_finder = ShortestPathsDijkstra(self, 'priority')
+            path_finder.allDist()
+        else 
+            dijkstra = Falses
+            print "This may take a while, especially on Paris"
+
         for (one, two) in station_pairs: 
-            print "%d out of %d done" % (count, len(station_pairs))
-            count+=1
             one_pop = self.station_lookup[one]['Usage'] 
             two_pop = self.station_lookup[one]['Usage'] 
-            path = self.a_star(one, two,False,False) 
+
+            if not dijkstra: 
+                path = self.a_star(one, two,False,False)
+            else: 
+                dist, path = path_finder.extract_path(one, two)
+
             for p in range(len(path) - 1): 
                 cong[(min(path[p], path[p+1]) , max(path[p], path[p+1]))] += (min([one_pop,two_pop]))
         
         # normalizing the congestions to be between 0 and 1 
         maximum = max(cong.values())     
-        
         for key in cong.keys(): 
             cong[key] /= float(maximum)
-            
+        
         self.congestion = cong  
 
-    def draw(self, colorCalculation, recalculate = False, congestion = True):
+    def draw(self, colorCalculation, algorithm = 'dijkstra-dheap', \
+        recalculate = False, congestion = True):
         print 'Beginning to draw graph'
+
         pos={} 
         for i in range(self.num_stations): 
             pos[i] = self.station_lookup[i]['Position']              
-        
-        if not congestion: 
+
+        if not congestion:
             nx.draw(self.graph_obj, pos, node_size = 15) 
-            plt.show()
             return 
 
         if recalculate or len(self.congestion) == 0: 
             print 'Calculating the congestion...'
-            self.calculateCongestion() 
-
+            self.calculateCongestion(algorithm) 
+        
         # Colorful nodes representing the total usage of that station 
+        '''
         for i in range(len(self.station_lookup)): 
             usage = self.station_lookup[i]['Usage']
             color = [usage/23000., np.sqrt(usage/23000.), 1 - usage/23000.]
-            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30,with_labels=False)
-#            nx.draw_networkx_labels(self,pos,labels = [i],font_size=1000)
+            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30, with_labels=False)
+        ''' 
+        nx.draw_networkx_nodes(self.graph_obj, pos, node_size = 30, node_color = 'b')
 
         for i in range(len(self.adj_list)): 
             for j in self.adj_list[i].keys(): 
                 x = min(i,j) 
                 y = max(i,j)
                 c = self.congestion[(x,y)]
-                nx.draw_networkx_edges(self.graph_obj, pos, edgelist = [(x,y)], edge_color = [colorCalculation(c)], width = 4)
+                nx.draw_networkx_edges(self.graph_obj, pos, edgelist = [(x,y)], edge_color = [colorCalculation(c)], width = 3)
 #%% 
                 
 #Computes Z-score for each edge's congestion. If it's negative, make the factor 1. Else, take Z-score and add 1 and square
@@ -396,13 +418,14 @@ class Graph:
 #function of congestion, but only the geographical distance.
 
 def runCongestionAdjusted (g):
-    
-    g.calculateCongestion()
+    if len(g.congestion) == 0:  
+        g.calculateCongestion()
     
     congestions = g.congestion
 
     #Compute average and standard deviation of congestion numbers
     thesum = 0.0
+
     for i in congestions:
         thesum = thesum + congestions[i]
     average = thesum / g.num_stations
@@ -434,7 +457,6 @@ def runCongestionAdjusted (g):
 
 
 def main():
-
     file_name = ''
     print "Would you like Boston (B) or Paris (P)?" 
     answer = get_user_input(['B', 'P'])
@@ -447,46 +469,37 @@ def main():
 
     def color(c): 
         return [ 1 - (1-c) ** 5, 0.8, 0.3]    
-    
+
+    algorithm_name = 'dijkstra-dheap'
+
     while (True): 
         print '''What would you like to do? \n 
-        - See the Graph (Type 'G')
-        - Display a Congestion Map (Type 'D') 
-        - Try Adding a New Edge (Type: 'A') 
-        - Run Simulation (Type: 'S')
-        - Exit (Type 'Q')
+        - See the Graph             (Type: 'G')
+        - Display a Congestion Map  (Type: 'D') 
+        - Try Adding a New Edge     (Type: 'A') 
+        - Run Simulation            (Type: 'S')
+        - Recommend a Route         (Type: 'R')
+        - Change the Algorithm      (Type: 'E')
+        - Exit                      (Type: 'Q')
         '''
-        answer = get_user_input(['G', 'D', 'A', 'S', 'Q'])
+        answer = get_user_input(['G', 'D', 'A', 'S', 'R','E', 'Q'])
 
         if answer == 0: 
             print "Drawing Subway Map..."
             subway.draw(color, False, False)  
+            plt.title("Subwa Map")
+            plt.show() 
 
         elif answer == 1: 
             print "Drawing Congestion Map..."
-            subway.draw(color)
+            subway.draw(color, False, True)
             plt.savefig("path.png") # save as png
             plt.title("Congestion Map")
             plt.show() 
 
         elif answer == 2: 
             print 'Type the name of the first station'  
-            while (True): 
-                try: 
-                    station1 = raw_input() 
-                    subway.index_lookup[station1]
-                    break 
-                except KeyError: 
-                    print 'Sorry, that was not a valid station name'
-                    
-            print 'Type the name of the second station'  
-            while (True): 
-                try: 
-                    station2 = raw_input() 
-                    subway.index_lookup[station2]
-                    break 
-                except KeyError: 
-                    print 'Sorry, that was not a valid station name'
+            station1, station2 = get_two_stations(subway)
             
             print 'Calculating now...' 
             
@@ -499,11 +512,30 @@ def main():
 
         elif answer == 3: 
             print "Simulating time..."
-            runCongestionAdjusted(subway, 1)
+            runCongestionAdjusted(subway)
             subway.draw(color, True)
             plt.title("Simulation Results")
             plt.show() 
-        elif answer == 4:
+
+        elif answer == 4: 
+            subway.calculateCongestion()
+            station1, station2 = get_two_stations(subway)
+            path = subway.a_star(station1, station2, True)
+            result = ''
+            for p in path: 
+                result += p 
+                result += '->'
+            print 'We recommend you take this path:' 
+            print result
+
+        elif answer == 5: 
+            print 'The current algorithm you are using is %s ' % algorithm_name 
+            print 
+            '''
+            What would you like to change it to?
+            '''
+
+        elif answer == 6:
             print 'Thanks for using our application! ' 
             return 
 #%%
@@ -516,6 +548,26 @@ def get_user_input(possible_answers):
         except ValueError :
             print "Sorry, I didn't quite get that" 
 
+def get_two_stations(subway):
+    print 'Type the name of the first station' 
+    while (True):
+        try: 
+            station1 = raw_input() 
+            subway.index_lookup[station1]
+            break 
+        except KeyError: 
+            print 'Sorry, that was not a valid station name'
+        
+    print 'Type the name of the second station'  
+    while (True): 
+        try: 
+            station2 = raw_input() 
+            subway.index_lookup[station2]
+            break 
+        except KeyError: 
+            print 'Sorry, that was not a valid station name'
+
+    return station1, station2
 
 #%%
 if __name__ == "__main__":
