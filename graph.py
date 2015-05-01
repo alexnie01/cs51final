@@ -377,6 +377,58 @@ class Graph:
                 nx.draw_networkx_edges(self.graph_obj, pos, edgelist = [(x,y)], edge_color = [colorCalculation(c)], width = 4)
 #%% 
                 
+#Computes Z-score for each edge's congestion. If it's negative, make the factor 1. Else, take Z-score and add 1 and square
+#root it for the multiply factor. Adjust weights and rerun shortest paths/congestion map. Do for n times.
+
+#Note: if n=0, then it just runs shortest paths and draws the congestion map. The distances between stations are then not a
+#function of congestion, but only the geographical distance.
+
+def runCongestionAdjusted (g, n):
+    
+    numIterLeft = n
+    g.calculateCongestion()
+    
+    while (numIterLeft > 0):
+
+        congestions = g.congestion
+
+        #Compute average and standard deviation of congestion numbers
+        thesum = 0.0
+        for i in congestions:
+            thesum = thesum + congestions[i]
+        average = thesum / g.num_stations
+
+        sumsquares = 0.0
+        for i in congestions:
+            sumsquares = sumsquares + ((congestions[i] - average) * (congestions[i] - average))
+        sdeviation = (1.0 / g.num_stations) * sumsquares
+
+        #Update edge weights by multiplying by transformation of Z-score, if the Z-score is positive
+        for aTuple in congestions:
+            zscore = (congestions[aTuple] - average) / sdeviation
+            
+            if zscore > 0:
+            
+                index1 = aTuple[0]
+                index2 = aTuple[1]
+
+                oldweight = g.adj_matrix[index1][index2]
+                
+                #Multiply by sqrt(Z-score +1)
+                g.adj_matrix[index1][index2] = oldweight * np.sqrt(zscore + 1.0)
+                g.adj_matrix[index2][index1] = oldweight * np.sqrt(zscore + 1.0)
+                g.adj_list[index1][index2] = oldweight * np.sqrt(zscore + 1.0)
+                g.adj_list[index2][index1] = oldweight * np.sqrt(zscore + 1.0)
+        
+        #Update congestion edge weights using shortest path algorithms
+        g.calculateCongestion()
+          
+        #Count how many iterations left to do
+        numIterLeft = numIterLeft - 1
+    
+    #Draw the new graph congestion map
+    g.draw(color)
+
 def main():
 
     file_name = ''
@@ -430,7 +482,7 @@ def main():
         
         return subway
     elif answer == 2: 
-        pass
+        runCongestionAdjusted(subway, 1)
 
 #%%
 
