@@ -49,6 +49,11 @@ from collections import Counter
 from scipy.sparse import csr_matrix
 from final_a_star import a_star as imported_a_star
 
+"""FOR THE SAKE OF PROVIDING HEURISTIC FOR TESTING SHORTEST PATH ON 
+RANDOM ADJACENCEY MATRICES. NOT CHEATING"""
+from scipy.sparse.csgraph import shortest_path 
+
+
 class Graph:
     ''' 
     A class that stores the map of a transportation network as an 
@@ -58,6 +63,8 @@ class Graph:
     #List of dictionaries. Key is which vertex the edge connects to. Value is edge weight.
     #Example: [{1: 3, 2: 5, 3: 4, 4: 1}, {0: 3, 3: 2, 4: 3}, {0: 5, 3: 2}, {0: 4, 1: 2, 2: 2, 4: 4}, {0: 1, 1: 3, 3: 4}]
     adj_list = []
+    
+    testing = False
     
     #Adjacency Matrix representation of our graph for quick lookups
     #List of lists of integers. Entries are 0 if those two vertices don't have an edge between them, else entry is edge weight.
@@ -102,9 +109,13 @@ class Graph:
         return (int(dist))
     
     def get_distance(self,node1,node2):
-        position1 = self.station_lookup[node1]['Position']
-        position2 = self.station_lookup[node2]['Position']
-        return self.compute_distance(position1,position2)
+        if self.testing:
+            solution = shortest_path(self.adj_matrix,directed=False)
+            return (float(solution[node1][node2]))/2
+        else:
+            position1 = self.station_lookup[node1]['Position']
+            position2 = self.station_lookup[node2]['Position']
+            return self.compute_distance(position1,position2)
         
     def path_length(self, node_list): 
         if len(node_list)==0:
@@ -192,10 +203,11 @@ class Graph:
             self.adj_list = self.adj_matrix_to_list(self.adj_matrix)
             self.graph_obj = nx.from_scipy_sparse_matrix(csr_matrix(adj_matrix))
             self.num_stations = len(adj_matrix)
+            self.testing = True
             
             
-    def a_star(self,start_index,end_index,named_list=False):
-        return imported_a_star(self,start_index,end_index,named_list)
+    def a_star(self,start_index,end_index,named_list,testing):
+        return imported_a_star(self,start_index,end_index,False,self.testing)
         
     ''' 
     Returns an array where indices are station indices and values are names 
