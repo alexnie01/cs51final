@@ -4,11 +4,8 @@ Created on Sun Apr 19 21:29:50 2015
 
 @author: evanyao, robertchen, rak, anie
 """
-
-import graph 
+ 
 import data_structures as ds
-import final_a_star.a_star as a_star 
-
     
 class ShortestPathsDijkstra:
     ''' 
@@ -23,63 +20,58 @@ class ShortestPathsDijkstra:
     prev_array = []
     dist_array = []
     num_stations = 0
+    adj_list = []
     
     # extract graph instance variables 
     def __init__(self, graph, name, d = None):
        self.num_stations = graph.num_stations
        self.prev_array = [[None]*self.num_stations]*self.num_stations
-       self.dist_array = [[sys.maxint]*self.num_stations]*self.num_stations
+       self.dist_array = [[float("inf")]*self.num_stations]*self.num_stations
+       self.adj_list = graph.adj_list
        if name == 'heap' and d != None:
-           self.data_structure = ds.Heap() 
+           self.ds = ds.DaryHeap(graph, d) 
        elif name == 'priority':
-           self.data_structure = ds.Priority(d)
+           self.ds = ds.Priority(graph)
        else:
            print "usage: ShortestPathDijkstra(graph, data_struct[, d-ary])"
-   
-   def singleSourceDist(self, init):
-       # wavefront
-       self.data_structure.insert(init,0)
-       
-       # stores final distances behind wavefront
-       dist = [sys.maxint] * self.num_stations
-       
-       # contains penultimate node on shortest path between source and sink
-       prev = [None] * self.num_stations
-       dist[init] = 0
-            
-        while len(self.data_structure) > 0:
-            
-            min_adj, dist[min_adj] = self.data_structure.deleteMin()
-            searched[min_adj] = True
-            
+    def singleSourceDist(self, init):
+        # wavefront for testing
+        self.ds.insert(init,0)
+        # stores final distances behind wavefront
+        dist = [float("inf")] * self.num_stations
+        # stores whether a node has been searched
+        searched = [False] * self.num_stations
+        searched[init] = True
+        # contains penultimate node on shortest path between source and sink
+        prev = [None] * self.num_stations
+        dist[init] = 0
+        while len(self.ds.data_structure) > 0:
+            min_adj, dist[min_adj] = self.ds.deleteMin()
             for j,k in self.adj_list[min_adj].iteritems():
                 test_dist = k + dist[min_adj]
                 if not searched[j]:
-                    self.data_structure.insert(j, test_dist)
+                    searched[j] = True
+                    self.ds.insert(j, test_dist)
                     prev[j] = min_adj
                     dist[j] = test_dist
                 elif dist[j] > test_dist:
                     prev[j] = min_adj
                     dist[j] = test_dist
-                    self.data_structure.decreaseKey(j, test_dist)
-        # prev list complete
+                    self.ds.decreaseKey(j, test_dist)
         self.prev_array[init] = prev
         self.dist_array[init] = dist
                         
     def allDist(self):
         for i in range(0, self.num_stations):
             self.singleSourceDist(i)
-        
-    def extact_path(self, init, dest):
+    def extract_path(self, init, dest):
         path = []
         to_node = init
         while to_node != dest:
-            paths.append(to_node)
-            to_node = self.prev_array[dest][init]
-        path.append[dest]
+            if to_node == None:
+                path = []
+                break
+            path.append(to_node)
+            to_node = self.prev_array[dest][to_node]
+        path.append(dest)
         return self.dist_array[init][dest], path
-        
-class ShortestPathsAStar(ShortestPathsAlg): 
-    pass
-
-congestion = ShortestPathsAlg

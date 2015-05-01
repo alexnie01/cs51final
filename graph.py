@@ -48,6 +48,7 @@ import itertools
 from collections import Counter
 from scipy.sparse import csr_matrix
 from final_a_star import a_star as imported_a_star
+from shortest_paths import ShortestPathsDijkstra
 
 """FOR THE SAKE OF PROVIDING HEURISTIC FOR TESTING SHORTEST PATH ON 
 RANDOM ADJACENCEY MATRICES. NOT CHEATING"""
@@ -208,8 +209,17 @@ class Graph:
             self.testing = True
             
             
-    def a_star(self,start_index,end_index,named_list,testing):
+    def a_star(self,start_index,end_index, named_list, testing):
         return imported_a_star(self,start_index,end_index,named_list,self.testing)
+        
+    def dijkstra(self, init, dest, data_structure, d = None,
+                 named_list = False, testing = True):
+        path_finder = ShortestPathsDijkstra(self, data_structure, d)
+        path_finder.allDist()
+        dist, path = path_finder.extract_path(init,dest)
+        if testing:
+            return dist
+        return path
         
     ''' 
     Returns an array where indices are station indices and values are names 
@@ -330,7 +340,11 @@ class Graph:
     
     def calculateCongestion(self): 
         cong = Counter()
-        for (one, two) in list(itertools.combinations(range(self.num_stations), 2)): 
+        station_pairs = list(itertools.combinations(range(self.num_stations), 2))
+        count = 0 
+        for (one, two) in station_pairs: 
+            print "%d out of %d done" % (count, len(station_pairs))
+            count+=1
             one_pop = self.station_lookup[one]['Usage'] 
             two_pop = self.station_lookup[one]['Usage'] 
             path = self.a_star(one, two,False,False) 
@@ -346,9 +360,7 @@ class Graph:
         self.congestion = cong  
 
     def draw(self, colorCalculation, recalculate = False, congestion = True):
-        if recalculate or len(self.congestion) == 0: 
-            self.calculateCongestion() 
-
+        print 'Beginning to draw graph'
         pos={} 
         for i in range(self.num_stations): 
             pos[i] = self.station_lookup[i]['Position']              
@@ -357,8 +369,9 @@ class Graph:
             nx.draw(self.graph_obj, pos, node_size = 15) 
             plt.show()
             return 
-            
+
         if recalculate or len(self.congestion) == 0: 
+            print 'Calculating the congestion...'
             self.calculateCongestion() 
 
         # Colorful nodes representing the total usage of that station 
@@ -429,59 +442,70 @@ def main():
         file_name = 'BostonData.csv' 
     elif (answer == 1):
         file_name = 'paris_orig.csv' 
-    
+
     subway = Graph(None, file_name)       
 
     def color(c): 
         return [ 1 - (1-c) ** 5, 0.8, 0.3]    
-        
-
-    print '''What would you like to do? \n 
-    - See the Graph (Type 'G')
-    - Display a Congestion Map (Type 'D') 
-    - Try Adding a New Edge (Type: 'A') 
-    - Run Simulation (Type: 'S')
-    '''
-    answer = get_user_input(['G', 'D', 'A', 'S'])
     
-    if answer == 0: 
-        subway.draw(color, False, False)   
-    elif answer == 1: 
-        subway.draw(color)
-        plt.savefig("path.png") # save as png
-        plt.title("Congestion Map")
-        plt.show() 
-        return subway
-    elif answer == 2: 
-        print 'Type the name of the first station'  
-        while (True): 
-            try: 
-                station1 = raw_input() 
-                subway.index_lookup[station1]
-                break 
-            except KeyError: 
-                print 'Sorry, that was not a valid station name'
-                
-        print 'Type the name of the second station'  
-        while (True): 
-            try: 
-                station2 = raw_input() 
-                subway.index_lookup[station2]
-                break 
-            except KeyError: 
-                print 'Sorry, that was not a valid station name'
-        
-        print 'Calculating...' 
-        
-        subway.add_route(station1, station2) 
-        subway.draw(color, True)
-        
-        return subway
-        
-    elif answer == 3: 
-        runCongestionAdjusted(subway, 1)
-        subway.draw(color, True)
+    while (True): 
+        print '''What would you like to do? \n 
+        - See the Graph (Type 'G')
+        - Display a Congestion Map (Type 'D') 
+        - Try Adding a New Edge (Type: 'A') 
+        - Run Simulation (Type: 'S')
+        - Exit (Type 'Q')
+        '''
+        answer = get_user_input(['G', 'D', 'A', 'S', 'Q'])
 
+        if answer == 0: 
+            print "Drawing Subway Map..."
+            subway.draw(color, False, False)  
+
+        elif answer == 1: 
+            print "Drawing Congestion Map..."
+            subway.draw(color)
+            plt.savefig("path.png") # save as png
+            plt.title("Congestion Map")
+            plt.show() 
+
+        elif answer == 2: 
+            print 'Type the name of the first station'  
+            while (True): 
+                try: 
+                    station1 = raw_input() 
+                    subway.index_lookup[station1]
+                    break 
+                except KeyError: 
+                    print 'Sorry, that was not a valid station name'
+                    
+            print 'Type the name of the second station'  
+            while (True): 
+                try: 
+                    station2 = raw_input() 
+                    subway.index_lookup[station2]
+                    break 
+                except KeyError: 
+                    print 'Sorry, that was not a valid station name'
+            
+            print 'Calculating now...' 
+            
+            subway.add_route(station1, station2) 
+
+            print 'Route added'
+            subway.draw(color, True)
+            plt.title("Simulation Results")
+            plt.show()
+
+        elif answer == 3: 
+            print "Simulating time..."
+            runCongestionAdjusted(subway, 1)
+            subway.draw(color, True)
+            plt.title("Simulation Results")
+            plt.show() 
+        elif answer == 4:
+            print 'Thanks for using our application! ' 
+            return 
 #%%
 
 def get_user_input(possible_answers):  
