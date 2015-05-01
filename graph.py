@@ -207,7 +207,7 @@ class Graph:
             
             
     def a_star(self,start_index,end_index,named_list,testing):
-        return imported_a_star(self,start_index,end_index,False,self.testing)
+        return imported_a_star(self,start_index,end_index,named_list,self.testing)
         
     ''' 
     Returns an array where indices are station indices and values are names 
@@ -331,7 +331,7 @@ class Graph:
         for (one, two) in list(itertools.combinations(range(self.num_stations), 2)): 
             one_pop = self.station_lookup[one]['Usage'] 
             two_pop = self.station_lookup[one]['Usage'] 
-            path = self.a_star(one, two) 
+            path = self.a_star(one, two,False,False) 
             for p in range(len(path) - 1): 
                 cong[(min(path[p], path[p+1]) , max(path[p], path[p+1]))] += (min([one_pop,two_pop]))
         
@@ -343,13 +343,20 @@ class Graph:
             
         self.congestion = cong  
         
-    def draw(self, colorCalculation, recalculate = False): 
-        if recalculate or not hasattr(self, 'congestion'): 
-            self.calculateCongestion() 
+    def draw(self, colorCalculation, congestion = True, recalculate = False):
         
         pos={} 
         for i in range(self.num_stations): 
-            pos[i] = self.station_lookup[i]['Position'] 
+            pos[i] = self.station_lookup[i]['Position']        
+            
+        if not congestion: 
+            nx.draw(self.graph_obj, pos, node_size = 15) 
+            return 
+            
+        if recalculate or not hasattr(self, 'congestion'): 
+            self.calculateCongestion() 
+        
+
             
         # Colorful nodes representing the total usage of that station 
         for i in range(len(self.station_lookup)): 
@@ -367,7 +374,7 @@ class Graph:
                 
 def main():
     subway = Graph(None,'BostonData.csv')               
-     #%%               
+    #%%               
     def color(c): 
         return [ 1 - (1-c) ** 10, 0.8, 0.3]   
     
@@ -377,5 +384,9 @@ def main():
     plt.title("Boston Subway System")
     plt.show()
 
-#%%
-paris=Graph(None,'paris_orig.csv')
+    #%%
+def f():
+    return []
+#paris=Graph(None,'paris_orig.csv')
+#plt.savefig("paris.pdf")
+#plt.show()
