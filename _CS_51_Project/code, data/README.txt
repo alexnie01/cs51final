@@ -29,4 +29,5 @@ R) Recommend a Route:
 E) Change the Algorithm:
 	Switch between Dijkstra's and A* or data
 	structure used by Dijkstra's
+L) Gets names of stations.
 Q) Exit:
