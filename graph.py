@@ -345,27 +345,19 @@ class Graph:
             
         self.congestion = cong  
         
-<<<<<<< HEAD
-    def draw(self, colorCalculation, recalculate = False): 
-        if recalculate or len(self.congestion) == 0: 
-            self.calculateCongestion() 
-=======
-    def draw(self, colorCalculation, congestion = True, recalculate = False):
->>>>>>> 77fb9d691bb7a1c6b8378c60fe1081bfc22edf43
-        
+    def draw(self, colorCalculation, recalculate = False, congestion = True):
         pos={} 
         for i in range(self.num_stations): 
-            pos[i] = self.station_lookup[i]['Position']        
-            
+            pos[i] = self.station_lookup[i]['Position']              
+        
         if not congestion: 
             nx.draw(self.graph_obj, pos, node_size = 15) 
+            plt.show()
             return 
             
-        if recalculate or not hasattr(self, 'congestion'): 
+        if recalculate or len(self.congestion) == 0: 
             self.calculateCongestion() 
-        
 
-            
         # Colorful nodes representing the total usage of that station 
         for i in range(len(self.station_lookup)): 
             usage = self.station_lookup[i]['Usage']
@@ -382,7 +374,7 @@ class Graph:
 #%% 
                 
 def main():
-<<<<<<< HEAD
+
     file_name = ''
     print "Would you like Boston (B) or Paris (P)?" 
     answer = get_user_input(['B', 'P'])
@@ -392,29 +384,28 @@ def main():
         file_name = 'paris_orig.csv' 
     
     subway = Graph(None, file_name)       
-=======
-    subway = Graph(None,'BostonData.csv')               
-    #%%               
-    def color(c): 
-        return [ 1 - (1-c) ** 10, 0.8, 0.3]   
->>>>>>> 77fb9d691bb7a1c6b8378c60fe1081bfc22edf43
     
     def color(c): 
-        return [ 1 - (1-c) ** 5, 0.8, 0.3]      
-    
+        return [ 1 - (1-c) ** 5, 0.8, 0.3]    
+        
+
     print '''What would you like to do? \n 
+    - See the Graph (Type 'G')
     - Display a Congestion Map (Type 'D') 
     - Try Adding a New Edge (Type: 'A') 
     - Run Simulation (Type: 'S')
     '''
-    answer = get_user_input(['D', 'A', 'S'])
+    answer = get_user_input(['G', 'D', 'A', 'S'])
+    
     if answer == 0: 
+        subway.draw(color, False, False)   
+    elif answer == 1: 
         subway.draw(color)
         plt.savefig("path.png") # save as png
         plt.title("Congestion Map")
         plt.show() 
         return subway
-    elif answer == 1: 
+    elif answer == 2: 
         print 'Type the name of the first station'  
         while (True): 
             try: 
@@ -439,7 +430,7 @@ def main():
         subway.draw(color, True)
         
         return subway
-    elif answer == 2: 
+    elif answer == 3: 
         pass
 
 #%%
