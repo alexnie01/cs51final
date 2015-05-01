@@ -362,8 +362,9 @@ class Graph:
         for i in range(len(self.station_lookup)): 
             usage = self.station_lookup[i]['Usage']
             color = [usage/23000., np.sqrt(usage/23000.), 1 - usage/23000.]
-            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30)
-        
+            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30,with_labels=False)
+#            nx.draw_networkx_labels(self,pos,labels = [i],font_size=1000)
+
         for i in range(len(self.adj_list)): 
             for j in self.adj_list[i].keys(): 
                 x = min(i,j) 
@@ -387,6 +388,9 @@ def main():
     #%%
 def f():
     return []   
-#paris=Graph(None,'paris_orig.csv')
-#plt.savefig("paris.pdf")
-#plt.show()
+paris=Graph(None,'paris_orig.csv')
+paris.draw(f,False)
+plt.savefig("paris.pdf")
+plt.show()
+
+nx.draw(paris.graph_obj)
