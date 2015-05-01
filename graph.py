@@ -211,10 +211,10 @@ class Graph:
             self.testing = True
             
             
-    def a_star(self,start_index,end_index, named_list, testing = False):
+    def a_star(self,start_index,end_index, named_list = False, testing = False):
         return imported_a_star(self,start_index,end_index,named_list,testing)
         
-    def dijkstra(self, init, dest, data_structure, d = None,
+    def dijkstra(self, init, dest, data_structure = 'heap', d = None,
                  named_list = False, testing = True):
         path_finder = ShortestPathsDijkstra(self, data_structure, d)
         path_finder.allDist()
@@ -341,7 +341,7 @@ class Graph:
                     self.graph_obj.add_edge(i,j, weight = self.adj_matrix[i][j])
     
     def calculateCongestion(self, algorithm = 'dijkstra-dheap'): 
-        print 'Calculating Congestions'
+        print 'Calculating Congestions using %s' % (algorithm)
         cong = Counter()
 
         station_pairs = list(itertools.combinations(range(self.num_stations), 2))
@@ -352,14 +352,15 @@ class Graph:
         if algorithm == 'dijkstra-dheap':
             path_finder = ShortestPathsDijkstra(self,'heap', 2)
             path_finder.allDist()
-        elif algorithm == 'dijkstra-priority' 
+        elif algorithm == 'dijkstra-priority': 
             path_finder = ShortestPathsDijkstra(self, 'priority')
             path_finder.allDist()
-        else 
-            dijkstra = Falses
-            print "This may take a while, especially on Paris"
+        else:
+            dijkstra = False
+            print "This may take a while. Do not try on Paris!"
 
         for (one, two) in station_pairs: 
+
             one_pop = self.station_lookup[one]['Usage'] 
             two_pop = self.station_lookup[one]['Usage'] 
 
@@ -486,13 +487,13 @@ def main():
 
         if answer == 0: 
             print "Drawing Subway Map..."
-            subway.draw(color, False, False)  
-            plt.title("Subwa Map")
+            subway.draw(color, congestion = False)  
+            plt.title("Subway Map")
             plt.show() 
 
         elif answer == 1: 
             print "Drawing Congestion Map..."
-            subway.draw(color, False, True)
+            subway.draw(color, algorithm = algorithm_name)
             plt.savefig("path.png") # save as png
             plt.title("Congestion Map")
             plt.show() 
@@ -506,34 +507,43 @@ def main():
             subway.add_route(station1, station2) 
 
             print 'Route added'
-            subway.draw(color, True)
+            subway.draw(color, recalculate = True, algorithm = algorithm_name)
             plt.title("Simulation Results")
             plt.show()
 
         elif answer == 3: 
             print "Simulating time..."
             runCongestionAdjusted(subway)
-            subway.draw(color, True)
+            subway.draw(color, recalculate = True, algorithm = algorithm_name)
             plt.title("Simulation Results")
             plt.show() 
 
         elif answer == 4: 
             subway.calculateCongestion()
             station1, station2 = get_two_stations(subway)
-            path = subway.a_star(station1, station2, True)
+            path = subway.a_star(station1, station2, )
             result = ''
             for p in path: 
-                result += p 
+                result += station_lookup[p]['Name'] 
                 result += '->'
             print 'We recommend you take this path:' 
             print result
 
         elif answer == 5: 
             print 'The current algorithm you are using is %s ' % algorithm_name 
-            print 
-            '''
+            print '''
             What would you like to change it to?
+            - Dijkstra's Binary Heap    (Type: B) 
+            - Dijkstra's Priority Queue (Type: Q) 
+            - A Star                    (Type: A)
             '''
+            answer = get_user_input(['B', 'Q', 'A']) 
+            if answer == 0: 
+                algorithm_name = 'dijkstra-dheap' 
+            elif answer == 1: 
+                algorithm_name = 'dijkstra-priority'
+            elif answer == 2: 
+                algorithm_name = 'astar'
 
         elif answer == 6:
             print 'Thanks for using our application! ' 
