@@ -28,7 +28,7 @@ class ShortestPathsDijkstra:
     def __init__(self, graph, name, d = None):
        self.num_stations = graph.num_stations
        self.prev_array = [[None]*self.num_stations]*self.num_stations
-       self.dist_array = [[sys.maxint]*self.num_stations]*self.num_stations
+       self.dist_array = [[float("inf")]*self.num_stations]*self.num_stations
        self.adj_list = graph.adj_list
        if name == 'heap' and d != None:
            self.ds = ds.DaryHeap(graph, d) 
@@ -42,7 +42,7 @@ class ShortestPathsDijkstra:
         # wavefront for testing
         self.ds.insert(init,0)
         # stores final distances behind wavefront
-        dist = [sys.maxint] * self.num_stations
+        dist = [float("inf")] * self.num_stations
         # stores whether a node has been searched
         searched = [False] * self.num_stations
         searched[init] = True
@@ -83,18 +83,18 @@ class ShortestPathsDijkstra:
         print "dist array is now "
         pprint(self.dist_array)
     def extract_path(self, init, dest):
-        aloha = raw_input("Continue?")
         print "extracting path between ", init, " and ", dest
         print "prev_array is "
         pprint(self.prev_array)
         path = []
         to_node = init
         while to_node != dest:
-            aloha = raw_input("Continue?")
+            if to_node == None:
+                path = []
+                break
             path.append(to_node)
             print "dest is ", dest, " and init is ", init
-            to_node = self.prev_array[dest][init]
-            init = to_node
+            to_node = self.prev_array[dest][to_node]
             print "path is currently ", path
             print "to_node is currently ", to_node
         path.append(dest)

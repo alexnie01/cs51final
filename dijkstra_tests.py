@@ -45,11 +45,11 @@ if __name__ == "__main__":
     dest = input("Destination index?")
     '''
     d = 3
-    N = 7
-    tests = 1
+    N = np.random.randint(0,50)
+    tests = 20
     struct = 'heap'
-    init = 1
-    dest = 6
+    init = np.random.randint(0,N)
+    dest = np.random.randint(0,N)
     
     for i in range(0, tests):
         random_graph = gen_random_adj_matrix(N)
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         a = test_version(test_graph, init, dest)
         b = float(my_version(test_graph, init, dest, struct, d, testing = True))
         print "a is ", a, ". b is ", b
-        print a == b
+        assert(a == b)
 
     
     
