@@ -476,7 +476,7 @@ def main():
 
     algorithm_name = 'dijkstra-dheap'
 
-    while (True): 
+    while (True):
         print '''What would you like to do? \n 
         - See the Graph             (Type: 'G')
         - Display a Congestion Map  (Type: 'D') 
@@ -525,10 +525,10 @@ def main():
         elif answer == 4: 
             subway.calculateCongestion()
             station1, station2 = get_two_stations(subway)
-            path = subway.a_star(station1, station2, )
+            path = subway.a_star(subway.index_lookup[station1], subway.index_lookup[station2], False,False)
             result = ''
             for p in path: 
-                result += station_lookup[p]['Name'] 
+                result += subway.station_lookup[p]['Name'] 
                 result += '->'
             print 'We recommend you take this path:' 
             print result
