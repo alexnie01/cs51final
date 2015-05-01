@@ -26,8 +26,6 @@ class ShortestPathsAlg(graph.Graph):
     '''
     def allDist(self): 
         pass 
-
-
     
 class ShortestPathsDijkstra(ShortestPathsAlg):
     ''' 
@@ -38,16 +36,20 @@ class ShortestPathsDijkstra(ShortestPathsAlg):
     Given two stations, remembers the shortest path between them 
     if it was calculated previously" 
     '''
-    paths_lookup = {} 
+    prev_array = []
+    dist_array = []
     
-    def __init__(self, name):
-       super(ShortestPathsDijkstra, self).__init__()   
-       if name == 'heap': 
+    # extract graph instance variables 
+    def __init__(self, graph, name, d = None):
+       super(ShortestPathsDijkstra, self).__init__()
+       self.prev_array = [[None]*self.num_stations]*self.num_stations
+       self.dist_array = [[sys.maxint]*self.num_stations]*self.num_stations
+       if name == 'heap' and d != None:
            self.data_structure = ds.Heap() 
-       elif name == 'fib': 
-           self.data_structure = ds.Fib()
-       else: 
-           self.data_structure = ds.Priority()  
+       elif name == 'priority':
+           self.data_structure = ds.Priority(d)
+       else:
+           print "usage: ShortestPathDijkstra(graph, data_struct[, d-ary])"
    
    '''
    Init = initial node index
@@ -73,14 +75,29 @@ class ShortestPathsDijkstra(ShortestPathsAlg):
                 test_dist = k + dist[min_adj]
                 if not searched[j]:
                     self.data_structure.insert(j, test_dist)
+                    prev[j] = min_adj
+                    dist[j] = test_dist
                 elif dist[j] > test_dist:
+                    prev[j] = min_adj
                     dist[j] = test_dist
                     self.data_structure.decreaseKey(j, test_dist)
-        # compile paths
+        # prev list complete
+        self.prev_array[init] = prev
+        self.dist_array[init] = dist
                         
     def allDist(self):
-        return None
-
+        for i in range(0, self.num_stations):
+            self.singleSourceDist(i)
+        
+    def extact_path(self, init, dest):
+        path = []
+        to_node = init
+        while to_node != dest:
+            paths.append(to_node)
+            to_node = self.prev_array[dest][init]
+        path.append[dest]
+        return self.dist_array[init][dest], path
+        
 class ShortestPathsAStar(ShortestPathsAlg): 
     pass
 
