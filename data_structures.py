@@ -16,7 +16,7 @@ class DijkstraDataStructure:
     def __init__(self, graph): 
         self.name = "Default List Dijkstra's" 
         # tracks index of key in data_structure
-        self.indices = [None] * self.num_stations
+        self.indices = [None] * graph.num_stations
         
     def deleteMin(self): 
         pass 

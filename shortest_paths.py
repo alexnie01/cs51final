@@ -9,25 +9,8 @@ import graph
 import data_structures as ds
 import final_a_star.a_star as a_star 
 
-''' 
-Abstract Class for Shortest Path Algorithms to implemenet
-
-'''
-class ShortestPathsAlg(graph.Graph): 
-    ''' 
-    Returns the shortest path to every other station as well 
-    as their corresponding total weight
-    '''
-    def singleSourceDist(self, init): 
-        pass
     
-    ''' 
-    Populates the paths_lookup dictionary completely 
-    '''
-    def allDist(self): 
-        pass 
-    
-class ShortestPathsDijkstra(ShortestPathsAlg):
+class ShortestPathsDijkstra:
     ''' 
     Shortest Paths via Dijkstra's 
     '''
@@ -36,12 +19,14 @@ class ShortestPathsDijkstra(ShortestPathsAlg):
     Given two stations, remembers the shortest path between them 
     if it was calculated previously" 
     '''
+    data_structure = None
     prev_array = []
     dist_array = []
+    num_stations = 0
     
     # extract graph instance variables 
     def __init__(self, graph, name, d = None):
-       super(ShortestPathsDijkstra, self).__init__()
+       self.num_stations = graph.num_stations
        self.prev_array = [[None]*self.num_stations]*self.num_stations
        self.dist_array = [[sys.maxint]*self.num_stations]*self.num_stations
        if name == 'heap' and d != None:
@@ -51,11 +36,7 @@ class ShortestPathsDijkstra(ShortestPathsAlg):
        else:
            print "usage: ShortestPathDijkstra(graph, data_struct[, d-ary])"
    
-   '''
-   Init = initial node index
-   '''
    def singleSourceDist(self, init):
-       
        # wavefront
        self.data_structure.insert(init,0)
        
