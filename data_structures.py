@@ -9,11 +9,14 @@ class DijkstraDataStructure:
     ''' 
     Underlying Data structure for Dijkstra's Algorithm 
     ''' 
+    name = ""
+    data_structure = []
+    indices = []
+    
     def __init__(self, graph): 
         self.name = "Default List Dijkstra's" 
-        self.data_structure = [] 
         # tracks index of key in data_structure
-        self.indices = [None] * self.num_stations
+        self.indices = [None] * graph.num_stations
         
     def deleteMin(self): 
         pass 

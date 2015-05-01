@@ -49,6 +49,11 @@ from collections import Counter
 from scipy.sparse import csr_matrix
 from final_a_star import a_star as imported_a_star
 
+"""FOR THE SAKE OF PROVIDING HEURISTIC FOR TESTING SHORTEST PATH ON 
+RANDOM ADJACENCEY MATRICES. NOT CHEATING"""
+from scipy.sparse.csgraph import shortest_path 
+
+
 class Graph:
     ''' 
     A class that stores the map of a transportation network as an 
@@ -58,6 +63,8 @@ class Graph:
     #List of dictionaries. Key is which vertex the edge connects to. Value is edge weight.
     #Example: [{1: 3, 2: 5, 3: 4, 4: 1}, {0: 3, 3: 2, 4: 3}, {0: 5, 3: 2}, {0: 4, 1: 2, 2: 2, 4: 4}, {0: 1, 1: 3, 3: 4}]
     adj_list = []
+    
+    testing = False
     
     #Adjacency Matrix representation of our graph for quick lookups
     #List of lists of integers. Entries are 0 if those two vertices don't have an edge between them, else entry is edge weight.
@@ -104,9 +111,13 @@ class Graph:
         return (int(dist))
     
     def get_distance(self,node1,node2):
-        position1 = self.station_lookup[node1]['Position']
-        position2 = self.station_lookup[node2]['Position']
-        return self.compute_distance(position1,position2)
+        if self.testing:
+            solution = shortest_path(self.adj_matrix,directed=False)
+            return (float(solution[node1][node2]))/2
+        else:
+            position1 = self.station_lookup[node1]['Position']
+            position2 = self.station_lookup[node2]['Position']
+            return self.compute_distance(position1,position2)
         
     def path_length(self, node_list): 
         if len(node_list)==0:
@@ -194,10 +205,11 @@ class Graph:
             self.adj_list = self.adj_matrix_to_list(self.adj_matrix)
             self.graph_obj = nx.from_scipy_sparse_matrix(csr_matrix(adj_matrix))
             self.num_stations = len(adj_matrix)
+            self.testing = True
             
             
-    def a_star(self,start_index,end_index,named_list=False):
-        return imported_a_star(self,start_index,end_index,named_list)
+    def a_star(self,start_index,end_index,named_list,testing):
+        return imported_a_star(self,start_index,end_index,named_list,self.testing)
         
     ''' 
     Returns an array where indices are station indices and values are names 
@@ -321,7 +333,7 @@ class Graph:
         for (one, two) in list(itertools.combinations(range(self.num_stations), 2)): 
             one_pop = self.station_lookup[one]['Usage'] 
             two_pop = self.station_lookup[one]['Usage'] 
-            path = self.a_star(one, two) 
+            path = self.a_star(one, two,False,False) 
             for p in range(len(path) - 1): 
                 cong[(min(path[p], path[p+1]) , max(path[p], path[p+1]))] += (min([one_pop,two_pop]))
         
@@ -333,20 +345,34 @@ class Graph:
             
         self.congestion = cong  
         
+<<<<<<< HEAD
     def draw(self, colorCalculation, recalculate = False): 
         if recalculate or len(self.congestion) == 0: 
             self.calculateCongestion() 
+=======
+    def draw(self, colorCalculation, congestion = True, recalculate = False):
+>>>>>>> 77fb9d691bb7a1c6b8378c60fe1081bfc22edf43
         
         pos={} 
         for i in range(self.num_stations): 
-            pos[i] = self.station_lookup[i]['Position'] 
+            pos[i] = self.station_lookup[i]['Position']        
+            
+        if not congestion: 
+            nx.draw(self.graph_obj, pos, node_size = 15) 
+            return 
+            
+        if recalculate or not hasattr(self, 'congestion'): 
+            self.calculateCongestion() 
+        
+
             
         # Colorful nodes representing the total usage of that station 
         for i in range(len(self.station_lookup)): 
             usage = self.station_lookup[i]['Usage']
             color = [usage/23000., np.sqrt(usage/23000.), 1 - usage/23000.]
-            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30)
-        
+            nx.draw_networkx_nodes(self.graph_obj, pos, nodelist = [i], node_color = [color], node_size = 30,with_labels=False)
+#            nx.draw_networkx_labels(self,pos,labels = [i],font_size=1000)
+
         for i in range(len(self.adj_list)): 
             for j in self.adj_list[i].keys(): 
                 x = min(i,j) 
@@ -356,6 +382,7 @@ class Graph:
 #%% 
                 
 def main():
+<<<<<<< HEAD
     file_name = ''
     print "Would you like Boston (B) or Paris (P)?" 
     answer = get_user_input(['B', 'P'])
@@ -365,6 +392,12 @@ def main():
         file_name = 'paris_orig.csv' 
     
     subway = Graph(None, file_name)       
+=======
+    subway = Graph(None,'BostonData.csv')               
+    #%%               
+    def color(c): 
+        return [ 1 - (1-c) ** 10, 0.8, 0.3]   
+>>>>>>> 77fb9d691bb7a1c6b8378c60fe1081bfc22edf43
     
     def color(c): 
         return [ 1 - (1-c) ** 5, 0.8, 0.3]      
@@ -419,6 +452,8 @@ def get_user_input(possible_answers):
         except ValueError :
             print "Sorry, I didn't quite get that" 
 
+
 #%%
 if __name__ == "__main__":
     s = main()
+

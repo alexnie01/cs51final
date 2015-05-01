@@ -6,7 +6,7 @@ Created on Sat Apr 25 12:42:19 2015
 """
 import itertools
 
-def a_star(graph, start, goal,named_list=False):
+def a_star(graph, start, goal,named_list=False,testing=False):
     if start==goal:
         if named_list:
             return graph.station_lookup[start]['Name']
@@ -18,7 +18,9 @@ def a_star(graph, start, goal,named_list=False):
     while len(agenda)!=0:   
         frontpath=agenda[0]
         if goal in frontpath:
-            if named_list:
+            if testing:
+                return graph.path_length(frontpath)
+            elif named_list:
                 return graph.nums_to_names(frontpath)
             else:
                 return frontpath
@@ -32,10 +34,10 @@ def a_star(graph, start, goal,named_list=False):
                 bud=list(frontpath)
                 bud.append(neighbor)
                 replacement.append(bud)
-        names = []
-        for i in range(len(replacement)):
-            R_names = [graph.station_lookup[num]['Name'] for num in replacement[i]]
-            names.append(R_names)
+#        names = []
+ #       for i in range(len(replacement)):
+  #          R_names = [graph.station_lookup[num]['Name'] for num in replacement[i]]
+   #         names.append(R_names)
 
 #REPLACE THE FRONT PATH WITH THE PATHS EXTENDING OUT OF IT           
         agenda.pop(0)
